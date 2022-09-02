@@ -1,0 +1,20 @@
+/* .App {
+  font-family: sans-serif;
+  text-align: center;
+} */
+
+.seat {
+  background-color: green;
+}
+
+.seat--reserved {
+  background-color: gray;
+}
+
+.seat--selected {
+  background-color: blue;
+}
+
+.seat-picker {
+  margin: auto;
+}

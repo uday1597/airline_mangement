@@ -1,0 +1,43 @@
+let flightState = [
+	{
+		id: 1,
+		AirportCode: "LAX",
+		AirportName: "Los Angeles",
+		from: "LAX",
+		to: "Austin",
+		Departure: "25 Jun 2019",
+		Arrival: "25 Jun 2019",
+		time: "1:05 AM",
+		AncillaryServices: [],
+		SpecialMeals: [],
+		ShoppingItems:[],
+	},
+	{
+		id: 2,
+		AirportCode: "Aus",
+		AirportName: "Austin",
+		from: "Aus",
+		to: "LAX",
+		Departure: "25 Jun 2019",
+		Arrival: "25 Jun 2019",
+		time: "3:05 AM",
+		AncillaryServices: [],
+		SpecialMeals: [],
+		ShoppingItems:[],
+	},
+	{
+		id: 3,
+		AirportCode: "CAL",
+		AirportName: "California",
+		from: "CAL",
+		to: "NY",
+		Departure: "15 Jun 2019",
+		Arrival: "15 Jun 2019",
+		time: "10:05 AM",
+		AncillaryServices: [],
+		SpecialMeals: [],
+		ShoppingItems:[],
+	},
+];
+
+export default flightState;
