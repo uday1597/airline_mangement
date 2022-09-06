@@ -19,11 +19,12 @@ import { useHistory } from "react-router-dom";
 import WelcomPage from "./WelcomePage";
 
 const MainPage = () => {
-
 	return (
 		<div>
-			<WelcomPage/>
-			
+			{/* <WelcomPage/> */}
+			<Header />
+			<FlightHeader />
+
 			<Switch>
 				<Route path='/header' component={Header} />
 				<Route path='/home' component={Home} />

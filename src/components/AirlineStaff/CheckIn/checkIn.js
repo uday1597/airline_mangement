@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import data from "../../../data";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Collapse from "@mui/material/Collapse";
-import List from "@mui/material/List";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SeatPicker from "react-seat-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { selectPassenger } from "../../../features/passenger/passengerSlice";
@@ -57,8 +55,6 @@ const checkIn = () => {
 	const [seatD8, setSeatD8] = useState(false);
 	const [seatD9, setSeatD9] = useState(false);
 	const [seatD10, setSeatD10] = useState(false);
-
-
 
 	const handleClick = () => {
 		setOpen(!open);
@@ -142,7 +138,7 @@ const checkIn = () => {
 			dispatch(updatePassengers(json));
 			toast.info(`Removed seat for  ${updatedPassenger.name}`);
 		} else {
-// setSeatA1(true);
+			// setSeatA1(true);
 			const json = {
 				editedId: passenger.id,
 				id: passenger.id,
@@ -180,137 +176,130 @@ const checkIn = () => {
 				<h1 style={{ textAlign: "center" }}>Manage Check In services</h1>
 				{data.map((data, key) => {
 					return (
-						<div key={key} className='passenger-row'>
-							<ListItemButton onClick={handleClick}>
-								<ListItemIcon></ListItemIcon>
-								<ListItemText
-									primary={
-										data.from +
-										" - " +
-										data.to +
-										" , Departure: " +
-										data.Departure +
-										" " +
-										data.time
-									}
-								/>
-								{open ? <ExpandLess /> : <ExpandMore />}
-							</ListItemButton>
-							<Collapse in={open} timeout='auto' unmountOnExit>
-								<List component='div' disablePadding>
-									<ListItemButton sx={{ pl: 4 }}>
-										<ListItemIcon>
-											<div style={{ marginTop: "20px", marginBottom: "20px" }}>
-												<div className='App'>
-													<SeatPicker
-														addSeatCallback={addSeatCallback}
-														rows={rows}
-														maxReservableSeats={select}
-														visible
-														alpha
-														loading
-														selectedByDefault
-													/>
+						<div>
+							<Accordion>
+								<AccordionSummary
+									expandIcon={<ExpandMoreIcon />}
+									aria-controls='panel1a-content'
+									id='panel1a-header'>
+									<Typography>
+										{data.from +
+											" - " +
+											data.to +
+											" , Departure: " +
+											data.Departure +
+											" " +
+											data.time}
+									</Typography>
+								</AccordionSummary>
+								<AccordionDetails>
+									<Typography>
+										<div className='App'>
+											<SeatPicker
+												addSeatCallback={addSeatCallback}
+												rows={rows}
+												maxReservableSeats={select}
+												visible
+												alpha
+												loading
+												selectedByDefault
+											/>
+										</div>
+										<br />
+										{passengerList.passenger.length === 0 ? (
+											<></>
+										) : (
+											<>
+												<div className='filter'>
+													<div style={{ color: "white" }}>
+														Filter passengers by below
+													</div>{" "}
+													<br />
 												</div>
-												<br />
-												{passengerList.passenger.length === 0 ? (
-													<></>
-												) : (
+												<div className='filter'>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("all");
+														}}>
+														All
+													</button>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("checkIn");
+														}}>
+														Checked In
+													</button>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("available");
+														}}>
+														Not Checked In
+													</button>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("wheel");
+														}}>
+														Wheel Chair
+													</button>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("infant");
+														}}>
+														Infant
+													</button>
+												</div>
+											</>
+										)}
+										{passengerList.passenger.map((passenger, key) => (
+											<div key={key} className='passenger-row'>
+												Name:{ passenger.name} {"	"}
+												Ancillary:{ passenger.ancillary} {"	"}
+												Seat No:{ passenger.seat}
+												{!passenger.seat && (
+													<Button
+														style={{ textTransform: "none" }}
+														key={passenger.id}
+														variant=''
+														onClick={(event) =>
+															handleCheckIn(event, passenger)
+														}>
+														<p>Check In</p>
+													</Button>
+												)}
+												{passenger.seat && (
 													<>
-														<div className='filter'>
-															<div style={{ color: "white" }}>
-																Filter passengers by below
-															</div>{" "}
-															<br />
-														</div>
-														<div className='filter'>
-															<button
-																className='filter-button edit'
-																onClick={() => {
-																	filterMethod("all");
-																}}>
-																All
-															</button>
-															<button
-																className='filter-button edit'
-																onClick={() => {
-																	filterMethod("checkIn");
-																}}>
-																Checked In
-															</button>
-															<button
-																className='filter-button edit'
-																onClick={() => {
-																	filterMethod("available");
-																}}>
-																Not Checked In
-															</button>
-															<button
-																className='filter-button edit'
-																onClick={() => {
-																	filterMethod("wheel");
-																}}>
-																Wheel Chair
-															</button>
-															<button
-																className='filter-button edit'
-																onClick={() => {
-																	filterMethod("infant");
-																}}>
-																Infant
-															</button>
-														</div>
+														<Button
+															style={{ textTransform: "none" }}
+															key={passenger.id}
+															variant='contained'
+															onClick={(event) =>
+																handleCheckIn(event, passenger)
+															}>
+															<p>Undo CheckIn</p>
+														</Button>{" "}
+														<span style={{ whiteSpace: "pre-line" }}></span>
+														<Button
+															style={{ textTransform: "none" }}
+															key={passenger.id}
+															variant='contained'
+															onClick={(event) =>
+																handleChangeSeat(event, passenger)
+															}>
+															<p>Change Seat</p>
+														</Button>
 													</>
 												)}
-												{passengerList.passenger.map((passenger, key) => (
-													<div key={key} className='passenger-row'>
-														Name:{passenger.name}
-														<br />
-														Ancillary:{passenger.ancillary}
-														<br />
-														Seat No:{passenger.seat}
-														<br />
-														{!passenger.seat && (
-															<Button
-																style={{ textTransform: "none" }}
-																key={passenger.id}
-																variant=''
-																onClick={(event) =>
-																	handleCheckIn(event, passenger)
-																}>
-																<p>Check In</p>
-															</Button>
-														)}
-														{passenger.seat && (
-															<>
-																<Button
-																	style={{ textTransform: "none" }}
-																	key={passenger.id}
-																	variant='contained'
-																	onClick={(event) =>
-																		handleCheckIn(event, passenger)
-																	}>
-																	<p>Undo CheckIn</p>
-																</Button>{" "}
-																<span style={{ whiteSpace: "pre-line" }}></span>
-																<Button
-																	style={{ textTransform: "none" }}
-																	key={passenger.id}
-																	variant='contained'
-																	onClick={(event) =>
-																		handleChangeSeat(event, passenger)
-																	}>
-																	<p>Change Seat</p>
-																</Button>
-															</>
-														)}
-													</div>
-												))}
 											</div>
-										</ListItemIcon>
-									</ListItemButton>
-								</List>
-							</Collapse>
+										))}
+									</Typography>
+								</AccordionDetails>
+							</Accordion>
+							<br />
 						</div>
 					);
 				})}

@@ -26,7 +26,7 @@ function PassengersForm(props) {
 
 	const handleNameChange = (e) => {
 		setInputName(e.target.value);
-		localStorage.setItem("PassengerName",e.target.value);
+		localStorage.setItem("PassengerName", e.target.value);
 	};
 	const handlePassChange = (e) => {
 		setInputPass(e.target.value);
@@ -45,6 +45,9 @@ function PassengersForm(props) {
 			pass: inputPass,
 			address: inputAddress,
 			dob: inputDob,
+			ancillaryServices: [],
+			mealPreference: [],
+			shopRequest: [],
 		};
 		if (!props.edit) {
 			dispatch(addPassenger(obj));
@@ -137,7 +140,7 @@ function PassengersForm(props) {
 						onChange={handleDobChange}
 					/>
 
-						<button className='passenger-button'>Add Passenger</button>
+					<button className='passenger-button'>Add Passenger</button>
 				</>
 			)}
 		</form>

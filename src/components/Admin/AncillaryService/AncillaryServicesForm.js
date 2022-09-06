@@ -20,6 +20,8 @@ function AncillaryServicesForm(props) {
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
+				setInputName("");
+
 		if (!props.edit) {
 			const obj = {
 				id: props.flightData.id,
@@ -33,34 +35,36 @@ function AncillaryServicesForm(props) {
 				AncillaryServices:
 					props.service === "Ancillary services"
 						? [
-								...props.flightData.AncillaryServices,
-								{ id: Math.floor(Math.random() * 1000), Service: inputName },
-						  ]
+							...props.flightData.AncillaryServices,
+							{ id: Math.floor(Math.random() * 1000), Service: inputName },
+						]
 						: props.flightData.AncillaryServices,
 				SpecialMeals:
 					props.service === "Special meals"
 						? [
-								...props.flightData.SpecialMeals,
-								{ id: Math.floor(Math.random() * 1000), Service: inputName },
-						  ]
+							...props.flightData.SpecialMeals,
+							{ id: Math.floor(Math.random() * 1000), Service: inputName },
+						]
 						: props.flightData.SpecialMeals,
 				ShoppingItems:
 					props.service === "Shopping items"
 						? [
-								...props.flightData.ShoppingItems,
-								{ id: Math.floor(Math.random() * 1000), Service: inputName },
-						  ]
+							...props.flightData.ShoppingItems,
+							{ id: Math.floor(Math.random() * 1000), Service: inputName },
+						]
 						: props.flightData.ShoppingItems,
 			};
 			dispatch(addFlightAncillaryService(obj));
 			toast.success("Ancillary Service Added!!!");
 		}
-		props.onSubmit({
-			data: props.edit.data,
-			editedId: props.edit.id,
-			id: Math.floor(Math.random() * 1000),
-			name: inputName,
-		});
+		else {
+			props.onSubmit({
+				data: props.edit.data,
+				editedId: props.edit.id,
+				id: Math.floor(Math.random() * 1000),
+				name: inputName,
+			});
+		}
 
 		setInputName("");
 	};

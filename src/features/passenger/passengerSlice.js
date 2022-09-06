@@ -1,4 +1,4 @@
-import { createSlice,nanoid, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const passengerSlice = createSlice({
 	name: "passenger",
@@ -37,18 +37,45 @@ export const passengerSlice = createSlice({
 			if (action.payload.filter === "all") {
 				filteredPassengers = [...state];
 			} else if (action.payload.filter === "pass") {
-				console.log([...state].filter(ele =>
-					ele.pass.includes('')));
-				filteredPassengers = [...state].filter(ele =>
-					ele.pass.includes(""));
-				 
+				console.log([...state].filter((ele) => ele.pass.includes("")));
+				filteredPassengers = [...state].filter((ele) => ele.pass.includes(""));
+
 				// filteredPassengers = [...state].filter((obj) => obj.pass === "").map((obj)=>obj);
 			} else if (action.payload.filter === "address") {
-				filteredPassengers = [...state].filter((obj) => obj.address === "").map((obj)=>obj);
+				filteredPassengers = [...state]
+					.filter((obj) => obj.address === "")
+					.map((obj) => obj);
 			} else if (action.payload.filter === "dob") {
-				filteredPassengers = [...state].filter((obj) => obj.dob === "").map((obj)=>obj);
+				filteredPassengers = [...state]
+					.filter((obj) => obj.dob === "")
+					.map((obj) => obj);
 			}
 			return filteredPassengers;
+		},
+		saveAncillaryForPassenger: (state, action) => {
+			const indexU = state.findIndex(
+				(passenger) => passenger.id === action.payload.id
+			);
+			const json = {
+				id: action.payload.id,
+				name: action.payload.name,
+				pass: action.payload.pass,
+				address: action.payload.address,
+				dob: action.payload.dob,
+				seat: action.payload.seat,
+				ancillaryServices: action.payload.ancillaryServices,
+				mealPreference: action.payload.mealPreference,
+				shopRequest: action.payload.shopRequest,
+			};
+			const updatedPassengers = {
+				...json,
+				passenger: state[indexU].passenger,
+			};
+			return [
+				...state.slice(0, indexU),
+				updatedPassengers,
+				...state.slice(indexU + 1),
+			];
 		},
 	},
 });
@@ -58,6 +85,7 @@ export const {
 	updatePassengers,
 	deletePassengers,
 	filterPassenger,
+	saveAncillaryForPassenger
 } = passengerSlice.actions;
 
 export const selectPassenger = (state) => state;
