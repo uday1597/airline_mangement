@@ -36,7 +36,9 @@ const AncillaryServices = () => {
 										</h4>
 									</Typography>
 								</AccordionSummary>
-								<SetAncillaryServices data={d} />
+								<div style={{ textAlign: "center",paddingBottom:"20px" }}>
+									<SetAncillaryServices data={d} />
+								</div>
 							</Accordion>
 							<br />
 						</>

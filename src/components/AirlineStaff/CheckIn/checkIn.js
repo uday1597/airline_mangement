@@ -12,7 +12,13 @@ import "./checkIn.css";
 import Button from "@mui/material/Button";
 import ToastServive from "react-material-toast";
 import { updatePassengers } from "../../../features/passenger/passengerSlice";
+import { Grid } from "@mui/material";
+import Box from "@mui/material/Box";
+import { selectSeat, addSeat,removeSeat } from "../../../features/seat/seatSlice";
+
 const checkIn = () => {
+	const rows = useSelector(selectSeat);
+	console.log(rows);
 	const dispatch = useDispatch();
 
 	const toast = ToastServive.new({
@@ -21,89 +27,16 @@ const checkIn = () => {
 		maxCount: 8,
 	});
 	const passengerList = useSelector(selectPassenger);
-	const [open, setOpen] = useState(true);
 	const [select, setSelect] = useState(0);
 	const [passenger, setPassenger] = useState("");
 
-	const [seatA1, setSeatA1] = useState(false);
-	const [seatA2, setSeatA2] = useState(false);
-	const [seatA3, setSeatA3] = useState(false);
-	const [seatA4, setSeatA4] = useState(false);
-	const [seatA5, setSeatA5] = useState(false);
-	const [seatA6, setSeatA6] = useState(false);
-	const [seatA7, setSeatA7] = useState(false);
-	const [seatA8, setSeatA8] = useState(false);
-	const [seatA9, setSeatA9] = useState(false);
-	const [seatA10, setSeatA10] = useState(false);
-	const [seatB1, setSeatB1] = useState(false);
-	const [seatB2, setSeatB2] = useState(false);
-	const [seatB3, setSeatB3] = useState(false);
-	const [seatB4, setSeatB4] = useState(false);
-	const [seatB5, setSeatB5] = useState(false);
-	const [seatB6, setSeatB6] = useState(false);
-	const [seatB7, setSeatB7] = useState(false);
-	const [seatB8, setSeatB8] = useState(false);
-	const [seatB9, setSeatB9] = useState(false);
-	const [seatB10, setSeatB10] = useState(false);
-	const [seatD1, setSeatD1] = useState(false);
-	const [seatD2, setSeatD2] = useState(false);
-	const [seatD3, setSeatD3] = useState(false);
-	const [seatD4, setSeatD4] = useState(false);
-	const [seatD5, setSeatD5] = useState(false);
-	const [seatD6, setSeatD6] = useState(false);
-	const [seatD7, setSeatD7] = useState(false);
-	const [seatD8, setSeatD8] = useState(false);
-	const [seatD9, setSeatD9] = useState(false);
-	const [seatD10, setSeatD10] = useState(false);
-
-	const handleClick = () => {
-		setOpen(!open);
-	};
-	const rows = [
-		[
-			{ id: 1, number: 1, isReserved: seatA1 },
-			{ id: 2, number: 2 },
-			{ id: 3, number: 3 },
-			{ id: 4, number: 4 },
-			{ id: 5, number: 5 },
-			{ id: 6, number: 6 },
-			{ id: 7, number: 7 },
-			{ id: 8, number: 8 },
-			{ id: 9, number: 9 },
-			{ id: 10, number: 10 },
-		],
-		[
-			{ id: 1, number: 1 },
-			{ id: 2, number: 2 },
-			{ id: 3, number: 3 },
-			{ id: 4, number: 4 },
-			{ id: 5, number: 5 },
-			{ id: 6, number: 6 },
-			{ id: 7, number: 7 },
-			{ id: 8, number: 8 },
-			{ id: 9, number: 9 },
-			{ id: 10, number: 10 },
-		],
-		[],
-		[
-			{ id: 1, number: 1 },
-			{ id: 2, number: 2 },
-			{ id: 3, number: 3 },
-			{ id: 4, number: 4 },
-			{ id: 5, number: 5 },
-			{ id: 6, number: 6 },
-			{ id: 7, number: 7 },
-			{ id: 8, number: 8 },
-			{ id: 9, number: 9 },
-			{ id: 10, number: 10 },
-		],
-	];
+	
 	const handleCheckIn = (event, param) => {
 		const updatedParam = { ...param, seat: "" };
 		setPassenger(updatedParam);
 		if (param.seat !== undefined) {
 			if (param.seat !== "") {
-				addSeatCallback("", "", 0, true, updatedParam);
+				addSeatCallback("", "", 0, true, param);
 			} else {
 				setSelect(1);
 				toast.info(`Select a seat for  ${param.name}`);
@@ -136,9 +69,14 @@ const checkIn = () => {
 				seat: "",
 			};
 			dispatch(updatePassengers(json));
+			const seats = updatedPassenger.seat.split(" ");
+			const removeJson = {
+				id: updatedPassenger.id,
+				selectedRow:seats[0]
+			}
+			dispatch(removeSeat(removeJson));
 			toast.info(`Removed seat for  ${updatedPassenger.name}`);
 		} else {
-			// setSeatA1(true);
 			const json = {
 				editedId: passenger.id,
 				id: passenger.id,
@@ -149,15 +87,16 @@ const checkIn = () => {
 				seat: row + " " + number,
 			};
 			dispatch(updatePassengers(json));
+			
+			const seatJson = {
+				id:id,
+				selectedRow: row,
+				seatNumber: number,
+				isReserved:true,
+				passengerId: passenger.id,
+			};
+			dispatch(addSeat(seatJson));
 			toast.info(`Added ${row + " " + number} seat for  ${passenger.name}`);
-			// switch (row + number) {
-			// 	case "A1":
-			// 		return setSeatA1(true);
-			// 	case "A2":
-			// 		return setSeatA2(true);
-			// 	default:
-			// 		return false;
-			// }
 		}
 		setSelect(0);
 	};
@@ -183,13 +122,15 @@ const checkIn = () => {
 									aria-controls='panel1a-content'
 									id='panel1a-header'>
 									<Typography>
-										{data.from +
-											" - " +
-											data.to +
-											" , Departure: " +
-											data.Departure +
-											" " +
-											data.time}
+										<h4 style={{ textAlign: "left" }}>
+											{data.from +
+												" - " +
+												data.to +
+												" , Departure: " +
+												data.Departure +
+												" " +
+												data.time}
+										</h4>
 									</Typography>
 								</AccordionSummary>
 								<AccordionDetails>
@@ -197,10 +138,9 @@ const checkIn = () => {
 										<div className='App'>
 											<SeatPicker
 												addSeatCallback={addSeatCallback}
-												rows={rows}
+												rows={rows.seat}
 												maxReservableSeats={select}
 												visible
-												alpha
 												loading
 												selectedByDefault
 											/>
@@ -256,44 +196,65 @@ const checkIn = () => {
 											</>
 										)}
 										{passengerList.passenger.map((passenger, key) => (
-											<div key={key} className='passenger-row'>
-												Name:{ passenger.name} {"	"}
-												Ancillary:{ passenger.ancillary} {"	"}
-												Seat No:{ passenger.seat}
-												{!passenger.seat && (
-													<Button
-														style={{ textTransform: "none" }}
-														key={passenger.id}
-														variant=''
-														onClick={(event) =>
-															handleCheckIn(event, passenger)
-														}>
-														<p>Check In</p>
-													</Button>
-												)}
-												{passenger.seat && (
-													<>
-														<Button
-															style={{ textTransform: "none" }}
-															key={passenger.id}
-															variant='contained'
-															onClick={(event) =>
-																handleCheckIn(event, passenger)
-															}>
-															<p>Undo CheckIn</p>
-														</Button>{" "}
-														<span style={{ whiteSpace: "pre-line" }}></span>
-														<Button
-															style={{ textTransform: "none" }}
-															key={passenger.id}
-															variant='contained'
-															onClick={(event) =>
-																handleChangeSeat(event, passenger)
-															}>
-															<p>Change Seat</p>
-														</Button>
-													</>
-												)}
+											<div>
+												<Box sx={{ flexGrow: 1 }}>
+													<Grid
+														container
+														spacing={{ xs: 11, md: 1 }}
+														columns={{ xs: 0, sm: 0, md: 0 }}>
+														<div key={key} className='passenger-row'>
+															Name:{passenger.name}
+															<br />
+															Ancillary:{passenger.ancillary}
+															<br />
+															Seat No:{passenger.seat}
+															<Grid item xs={2} sm={4} md={4}>
+																<div
+																	style={{
+																		transform: [{ rotate: "90deg" }],
+																	}}>
+																	{!passenger.seat && (
+																		<Button
+																			style={{ width: "135px" }}
+																			key={passenger.id}
+																			variant='contained'
+																			color='success'
+																			onClick={(event) =>
+																				handleCheckIn(event, passenger)
+																			}>
+																			<p>Check In</p>
+																		</Button>
+																	)}
+																	{passenger.seat && (
+																		<>
+																			<Button
+																				key={passenger.id}
+																				variant='contained'
+																				onClick={(event) =>
+																					handleCheckIn(event, passenger)
+																				}>
+																				<p>Undo CheckIn</p>
+																			</Button>{" "}
+																			<br />
+																			<br />
+																			<Button
+																				style={{ width: "135px" }}
+																				key={passenger.id}
+																				variant='contained'
+																				color='secondary'
+																				onClick={(event) =>
+																					handleChangeSeat(event, passenger)
+																				}>
+																				<p>Change Seat</p>
+																			</Button>
+																		</>
+																	)}
+																</div>
+															</Grid>
+														</div>
+													</Grid>
+												</Box>
+												<br />
 											</div>
 										))}
 									</Typography>

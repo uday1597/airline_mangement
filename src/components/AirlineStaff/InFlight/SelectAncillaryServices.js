@@ -105,7 +105,7 @@ const SelectAncillaryServices = (props) => {
 	};
 
 	return (
-		<div>
+		<div>			
 			<Button variant='contained' color='success' onClick={handleClickOpen}>
 				Add Ancillary Services
 			</Button>
@@ -115,8 +115,10 @@ const SelectAncillaryServices = (props) => {
 				aria-labelledby='alert-dialog-title'
 				aria-describedby='alert-dialog-description'>
 				<DialogTitle id='alert-dialog-title'>
-					<h4 style={{textAlign:"center"}}>Select AncillaryServices, Meal Preference and Shopping request for{" "}
-					{props.passenger.name}</h4>
+					<h4 style={{ textAlign: "center" }}>
+						Select AncillaryServices, Meal Preference and Shopping request for{" "}
+						{props.passenger.name}
+					</h4>
 				</DialogTitle>
 				<DialogContent>
 					<DialogContentText id='alert-dialog-description'>

@@ -223,7 +223,7 @@ const SetAncillaryServices = (props) => {
 	};
 	return (
 		<div>
-			<Button variant='contained' color='success' onClick={handleClickOpen}>
+			<Button variant='contained' color='success' onClick={handleClickOpen} style={{alignSelf:"center"}}>
 				Add Ancillary Services
 			</Button>
 			<Dialog
