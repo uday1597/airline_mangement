@@ -1,4 +1,4 @@
-import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export const passengerSlice = createSlice({
 	name: "passenger",
@@ -21,6 +21,13 @@ export const passengerSlice = createSlice({
 				address: action.payload.address,
 				dob: action.payload.dob,
 				seat: action.payload.seat,
+				flightId: action.payload.flightId,
+				route: action.payload.route,
+				display: true,
+				seatPref: action.payload.seatPref,
+				ancillaryServices: [],
+				mealPreference: [],
+				shopRequest: [],
 			};
 			const updatedPassengers = {
 				...json,
@@ -35,20 +42,51 @@ export const passengerSlice = createSlice({
 		filterPassenger: (state, action) => {
 			let filteredPassengers = [];
 			if (action.payload.filter === "all") {
-				filteredPassengers = [...state];
+				filteredPassengers = [...state].map((all) => {
+					return { ...all, display: true };
+				});
 			} else if (action.payload.filter === "pass") {
-				console.log([...state].filter((ele) => ele.pass.includes("")));
-				filteredPassengers = [...state].filter((ele) => ele.pass.includes(""));
-
-				// filteredPassengers = [...state].filter((obj) => obj.pass === "").map((obj)=>obj);
+				filteredPassengers = [...state].map((pass) => {
+					return pass.pass === ""
+						? { ...pass, display: true }
+						: { ...pass, display: false };
+				});
 			} else if (action.payload.filter === "address") {
-				filteredPassengers = [...state]
-					.filter((obj) => obj.address === "")
-					.map((obj) => obj);
+				filteredPassengers = [...state].map((add) => {
+					return add.address === ""
+						? { ...add, display: true }
+						: { ...add, display: false };
+				});
 			} else if (action.payload.filter === "dob") {
-				filteredPassengers = [...state]
-					.filter((obj) => obj.dob === "")
-					.map((obj) => obj);
+				filteredPassengers = [...state].map((dob) => {
+					return dob.dob === ""
+						? { ...dob, display: true }
+						: { ...dob, display: false };
+				});
+			} else if (action.payload.filter === "check") {
+				filteredPassengers = [...state].map((check) => {
+					return check.seat !== ""
+						? { ...check, display: true }
+						: { ...check, display: false };
+				});
+			} else if (action.payload.filter === "notCheck") {
+				filteredPassengers = [...state].map((notCheck) => {
+					return notCheck.seat === ""
+						? { ...notCheck, display: true }
+						: { ...notCheck, display: false };
+				});
+			} else if (action.payload.filter === "wheel") {
+				filteredPassengers = [...state].map((wheel) => {
+					return wheel.seatPref === "Wheel Chair"
+						? { ...wheel, display: true }
+						: { ...wheel, display: false };
+				});
+			} else if (action.payload.filter === "infant") {
+				filteredPassengers = [...state].map((infant) => {
+					return infant.seatPref === "Infant"
+						? { ...infant, display: true }
+						: { ...infant, display: false };
+				});
 			}
 			return filteredPassengers;
 		},
@@ -63,6 +101,9 @@ export const passengerSlice = createSlice({
 				address: action.payload.address,
 				dob: action.payload.dob,
 				seat: action.payload.seat,
+				display: true,
+				flightId: action.payload.flightId,
+				route: action.payload.route,
 				ancillaryServices: action.payload.ancillaryServices,
 				mealPreference: action.payload.mealPreference,
 				shopRequest: action.payload.shopRequest,
@@ -85,7 +126,7 @@ export const {
 	updatePassengers,
 	deletePassengers,
 	filterPassenger,
-	saveAncillaryForPassenger
+	saveAncillaryForPassenger,
 } = passengerSlice.actions;
 
 export const selectPassenger = (state) => state;

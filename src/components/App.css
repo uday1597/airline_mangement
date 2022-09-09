@@ -19,9 +19,7 @@ body {
 	justify-content: left;
 	background: #54574d;
 	text-align: center;
-	margin: 30px auto;
-	border-radius: 10px;
-	padding-bottom: 32px;
+	padding-bottom: 63px;
 }
 
 h1 {
@@ -41,21 +39,8 @@ h3 {
 }
 
 .passenger-form {
-	margin-bottom: 32px;
-}
-
-.passenger-input {
-	padding: 14px 32px 14px 16px;
-	border-radius: 4px 0 0 4px;
-	border: 2px solid #5d0cff;
-	outline: none;
-	width: 320px;
-	background: transparent;
-	color: rgb(0, 0, 0);
-}
-
-.passenger-input::placeholder {
-	color: #e2e2e2;
+	padding-left: 20px;
+	text-align: left;
 }
 
 .passenger-button {
@@ -71,10 +56,6 @@ h3 {
 	);
 	color: #fff;
 	text-transform: capitalize;
-}
-
-.passenger-input.edit {
-	border: 2px solid #149fff;
 }
 
 .passenger-button.edit {
@@ -151,7 +132,7 @@ h3 {
 .filter {
 	display: flex;
 	justify-content: right;
-	color: rgb(131, 110, 223);
+	color: rgb(255, 255, 255);
 	padding-right: 10px;
 	padding-bottom: 10px;
 	font-size: small;

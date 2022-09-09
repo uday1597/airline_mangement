@@ -1,25 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import data from "../../../data";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import SeatPicker from "react-seat-picker";
 import { useSelector, useDispatch } from "react-redux";
-import { selectPassenger } from "../../../features/passenger/passengerSlice";
+import { selectPassenger,filterPassenger } from "../../../features/passenger/passengerSlice";
 import "./checkIn.css";
 import Button from "@mui/material/Button";
 import ToastServive from "react-material-toast";
 import { updatePassengers } from "../../../features/passenger/passengerSlice";
 import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
-import { selectSeat, addSeat,removeSeat } from "../../../features/seat/seatSlice";
-
+import { removeSeat } from "../../../features/seat/seatSlice";
+import SelectSeatForPassenger from "./SelectSeatForPassenger";
+import ChangeSeatForPassenger from "./ChangeSeatForPassenger";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 const checkIn = () => {
-	const rows = useSelector(selectSeat);
-	console.log(rows);
 	const dispatch = useDispatch();
+	const [value, setValue] = React.useState("all");
 
 	const toast = ToastServive.new({
 		place: "topRight",
@@ -27,84 +31,36 @@ const checkIn = () => {
 		maxCount: 8,
 	});
 	const passengerList = useSelector(selectPassenger);
-	const [select, setSelect] = useState(0);
-	const [passenger, setPassenger] = useState("");
-
-	
-	const handleCheckIn = (event, param) => {
-		const updatedParam = { ...param, seat: "" };
-		setPassenger(updatedParam);
-		if (param.seat !== undefined) {
-			if (param.seat !== "") {
-				addSeatCallback("", "", 0, true, param);
-			} else {
-				setSelect(1);
-				toast.info(`Select a seat for  ${param.name}`);
-			}
-		} else {
-			setSelect(1);
-			toast.info(`Select a seat for  ${param.name}`);
+	const displayPassengers = passengerList.passenger.map((p) => {
+		if (p.display) {
+			return p;
 		}
-	};
-	const handleChangeSeat = (event, param) => {
-		setSelect(1);
-		toast.info(`Change seat for  ${param.name}`);
-	};
-
-	const addSeatCallback = (
-		row,
-		number,
-		id,
-		update = false,
-		updatedPassenger
-	) => {
-		if (update) {
-			const json = {
-				editedId: updatedPassenger.id,
-				id: updatedPassenger.id,
-				name: updatedPassenger.name,
-				pass: updatedPassenger.pass,
-				address: updatedPassenger.address,
-				dob: updatedPassenger.dob,
-				seat: "",
-			};
-			dispatch(updatePassengers(json));
-			const seats = updatedPassenger.seat.split(" ");
-			const removeJson = {
-				id: updatedPassenger.id,
-				selectedRow:seats[0]
-			}
-			dispatch(removeSeat(removeJson));
-			toast.info(`Removed seat for  ${updatedPassenger.name}`);
-		} else {
-			const json = {
-				editedId: passenger.id,
-				id: passenger.id,
-				name: passenger.name,
-				pass: passenger.pass,
-				address: passenger.address,
-				dob: passenger.dob,
-				seat: row + " " + number,
-			};
-			dispatch(updatePassengers(json));
-			
-			const seatJson = {
-				id:id,
-				selectedRow: row,
-				seatNumber: number,
-				isReserved:true,
-				passengerId: passenger.id,
-			};
-			dispatch(addSeat(seatJson));
-			toast.info(`Added ${row + " " + number} seat for  ${passenger.name}`);
-		}
-		setSelect(0);
-	};
-
-	const filterMethod = (value) => {
+	});
+	const undoCheckIn = (event, updatedPassenger, flightId) => {
 		const json = {
-			passengerList,
-			filter: value,
+			editedId: updatedPassenger.id,
+			id: updatedPassenger.id,
+			name: updatedPassenger.name,
+			pass: updatedPassenger.pass,
+			address: updatedPassenger.address,
+			dob: updatedPassenger.dob,
+			seat: "",
+		};
+		dispatch(updatePassengers(json));
+		const seats = updatedPassenger.seat.split(" ");
+		const removeJson = {
+			id: updatedPassenger.id,
+			selectedRow: seats[0],
+			flightId: flightId,
+		};
+		dispatch(removeSeat(removeJson));
+		toast.info(`Removed seat for  ${updatedPassenger.name}`);
+	};
+
+	const filterMethod = (event) => {
+		setValue(event.target.value);
+		const json = {
+			filter: event.target.value,
 		};
 		dispatch(filterPassenger(json));
 	};
@@ -113,7 +69,7 @@ const checkIn = () => {
 		<div className='homepage'>
 			<div className='jumbotron'>
 				<h1 style={{ textAlign: "center" }}>Manage Check In services</h1>
-				{data.map((data, key) => {
+				{data.map((data) => {
 					return (
 						<div>
 							<Accordion>
@@ -135,128 +91,156 @@ const checkIn = () => {
 								</AccordionSummary>
 								<AccordionDetails>
 									<Typography>
-										<div className='App'>
-											<SeatPicker
-												addSeatCallback={addSeatCallback}
-												rows={rows.seat}
-												maxReservableSeats={select}
-												visible
-												loading
-												selectedByDefault
-											/>
-										</div>
-										<br />
+										<div className='App'></div>
 										{passengerList.passenger.length === 0 ? (
-											<></>
+											<>
+												<h4 style={{ color: "grey" }}>
+													Add passengers to Check in{" "}
+												</h4>
+											</>
 										) : (
 											<>
-												<div className='filter'>
-													<div style={{ color: "white" }}>
-														Filter passengers by below
-													</div>{" "}
-													<br />
-												</div>
-												<div className='filter'>
-													<button
-														className='filter-button edit'
-														onClick={() => {
-															filterMethod("all");
-														}}>
-														All
-													</button>
-													<button
-														className='filter-button edit'
-														onClick={() => {
-															filterMethod("checkIn");
-														}}>
-														Checked In
-													</button>
-													<button
-														className='filter-button edit'
-														onClick={() => {
-															filterMethod("available");
-														}}>
-														Not Checked In
-													</button>
-													<button
-														className='filter-button edit'
-														onClick={() => {
-															filterMethod("wheel");
-														}}>
-														Wheel Chair
-													</button>
-													<button
-														className='filter-button edit'
-														onClick={() => {
-															filterMethod("infant");
-														}}>
-														Infant
-													</button>
+												<div style={{ paddingRight: "35px" }}>
+													<div className='filter'>
+														<FormControl>
+															<FormLabel id='demo-radio-buttons-group-label'>
+																<h4
+																	style={{
+																		color: "black",
+																		textAlign: "right",
+																		paddingRight: "15px",
+																	}}>
+																	Filter passengers by below
+																</h4>
+															</FormLabel>
+															<RadioGroup
+																row
+																sx={{
+																	"& .MuiSvgIcon-root": {
+																		fontSize: 20,
+																	},
+																	color: "black",
+																}}
+																value={value}
+																onChange={filterMethod}
+																defaultValue='all'
+																name='radio-buttons-group'>
+																<FormControlLabel
+																	value='all'
+																	control={<Radio />}
+																	label='All'
+																/>
+																<FormControlLabel
+																	value='check'
+																	control={<Radio />}
+																	label='Checked In'
+																/>
+																<FormControlLabel
+																	value='notCheck'
+																	control={<Radio />}
+																	label='Not Checked In'
+																/>
+																<FormControlLabel
+																	value='wheel'
+																	control={<Radio />}
+																	label='Wheel Chair'
+																/>
+																<FormControlLabel
+																	value='infant'
+																	control={<Radio />}
+																	label='Infant'
+																/>
+															</RadioGroup>
+														</FormControl>
+													</div>
 												</div>
 											</>
 										)}
-										{passengerList.passenger.map((passenger, key) => (
-											<div>
-												<Box sx={{ flexGrow: 1 }}>
-													<Grid
-														container
-														spacing={{ xs: 11, md: 1 }}
-														columns={{ xs: 0, sm: 0, md: 0 }}>
-														<div key={key} className='passenger-row'>
-															Name:{passenger.name}
-															<br />
-															Ancillary:{passenger.ancillary}
-															<br />
-															Seat No:{passenger.seat}
-															<Grid item xs={2} sm={4} md={4}>
-																<div
-																	style={{
-																		transform: [{ rotate: "90deg" }],
-																	}}>
-																	{!passenger.seat && (
-																		<Button
-																			style={{ width: "135px" }}
-																			key={passenger.id}
-																			variant='contained'
-																			color='success'
-																			onClick={(event) =>
-																				handleCheckIn(event, passenger)
-																			}>
-																			<p>Check In</p>
-																		</Button>
-																	)}
-																	{passenger.seat && (
-																		<>
-																			<Button
-																				key={passenger.id}
-																				variant='contained'
-																				onClick={(event) =>
-																					handleCheckIn(event, passenger)
-																				}>
-																				<p>Undo CheckIn</p>
-																			</Button>{" "}
-																			<br />
-																			<br />
-																			<Button
-																				style={{ width: "135px" }}
-																				key={passenger.id}
-																				variant='contained'
-																				color='secondary'
-																				onClick={(event) =>
-																					handleChangeSeat(event, passenger)
-																				}>
-																				<p>Change Seat</p>
-																			</Button>
-																		</>
-																	)}
-																</div>
-															</Grid>
-														</div>
-													</Grid>
-												</Box>
-												<br />
-											</div>
-										))}
+										{displayPassengers
+											.filter((d) => d !== undefined)
+											.map((passenger, key) => (
+												<div>
+													<Box sx={{ flexGrow: 1 }}>
+														<Grid
+															container
+															spacing={{ xs: 11, md: 1 }}
+															columns={{ xs: 0, sm: 0, md: 0 }}>
+															<div key={key} className='passenger-row'>
+																Name: {passenger.name}
+																<br />
+																Ancillary Services:{" "}
+																{passenger.ancillaryServices !== undefined
+																	? passenger.ancillaryServices.join(", ")
+																	: ""}
+																<br />
+																Meal Preference: {passenger.mealPreference}
+																<br />
+																Shopping request: {passenger.shopRequest}
+																<br />
+																Seat No: {passenger.seat}{" "}
+																{passenger.route !== undefined &&
+																	"	(" + passenger.route + ")"}
+																<Grid item xs={2} sm={4} md={4}>
+																	<div
+																		style={{
+																			transform: [{ rotate: "90deg" }],
+																		}}>
+																		<SelectSeatForPassenger
+																			open={false}
+																			passenger={passenger}
+																			data={data}
+																		/>
+
+																		{passenger.seat &&
+																			passenger.flightId !== data.id && (
+																				<h4 style={{ color: "greenyellow" }}>
+																					To check in {passenger.name} to
+																					current flight{" "}
+																					{" (" +
+																						data.from +
+																						" - " +
+																						data.to +
+																						")"}
+																					<br />
+																					Undo check in from already checked in
+																					flight {" (" + passenger.route + ")"}
+																				</h4>
+																			)}
+																		<br />
+																		{passenger.seat && (
+																			<>
+																				<Button
+																					key={passenger.id}
+																					variant='contained'
+																					disabled={
+																						passenger.flightId !== data.id
+																					}
+																					onClick={(event) =>
+																						undoCheckIn(
+																							event,
+																							passenger,
+																							data.id
+																						)
+																					}>
+																					<p>Undo CheckIn</p>
+																				</Button>{" "}
+																				<br />
+																				<br />
+																				<ChangeSeatForPassenger
+																					open={false}
+																					passenger={passenger}
+																					data={data}
+																				/>
+																			</>
+																		)}
+																	</div>
+																</Grid>
+															</div>
+														</Grid>
+													</Box>
+													<br />
+												</div>
+											))}
 									</Typography>
 								</AccordionDetails>
 							</Accordion>

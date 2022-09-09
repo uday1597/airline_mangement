@@ -12,42 +12,134 @@ export const seatSlice = createSlice({
 				isReserved: action.payload.isReserved,
 				passengerId: action.payload.passengerId,
 			};
-			const indexU = [...state[action.payload.selectedRow - 1]].findIndex(
-				(seat) => seat.id === action.payload.id
+			const flightIndexU = [...state].findIndex(
+				(flight) => flight.flightId === action.payload.flightId - 1
 			);
-			const updateSeats = [
-				...state[action.payload.selectedRow - 1].map((el) => {
-					return el.id === indexU + 1 ? json : el;
-				}),
-			];
+			const indexU = state[flightIndexU].rows[
+				action.payload.selectedRow - 1
+			].seats.findIndex((f) => f.id === action.payload.id);
+			const rows = state[flightIndexU].rows;
+
+			const updateSeats = {
+				flightId: flightIndexU,
+				rows: [
+					...rows.map((r) => {
+						return r.rowId === action.payload.selectedRow - 1
+							? {
+									...r,
+									seats: r.seats.map((s) => {
+										return s.id === indexU + 1 ? json : s;
+									}),
+							  }
+							: r;
+					}),
+				],
+			};
 			return [
-				...state.slice(0, action.payload.selectedRow - 1),
+				...state.slice(0, action.payload.flightId - 1),
 				updateSeats,
-				...state.slice(action.payload.selectedRow),
+				...state.slice(action.payload.flightId),
 			];
 		},
 		removeSeat: (state, action) => {
-			debugger;
-			const indexU = [...state[action.payload.selectedRow - 1]].findIndex(
-				(seat) => seat.passengerId === action.payload.id
+			const flightIndexU = [...state].findIndex(
+				(flight) => flight.flightId === action.payload.flightId - 1
 			);
-			const updateSeats = [
-				...state[action.payload.selectedRow - 1].map((el) => {
-					return el.id === indexU + 1
-						? { ...el, passengerId: "", isReserved: false }
-						: el;
-				}),
-			];
+			const indexU = state[flightIndexU].rows[
+				action.payload.selectedRow - 1
+			].seats.findIndex((f) => f.passengerId === action.payload.id);
+			const rows = state[flightIndexU].rows;
+			const updateSeats = {
+				flightId: flightIndexU,
+				rows: [
+					...rows.map((r) => {
+						return r.rowId === action.payload.selectedRow - 1
+							? {
+									...r,
+									seats: r.seats.map((s) => {
+										return s.id === indexU + 1
+											? { ...s, passengerId: "", isReserved: false }
+											: s;
+									}),
+							  }
+							: r;
+					}),
+				],
+			};
 			return [
-				...state.slice(0, action.payload.selectedRow - 1),
+				...state.slice(0, action.payload.flightId - 1),
 				updateSeats,
-				...state.slice(action.payload.selectedRow),
+				...state.slice(action.payload.flightId),
+			];
+		},
+		changeSeat: (state, action) => {
+			const flightIndexU = [...state].findIndex(
+				(flight) => flight.flightId === action.payload.flightId - 1
+			);
+			const oldIndexU = state[flightIndexU].rows[
+				action.payload.oldSelectedRow - 1
+			].seats.findIndex((f) => f.passengerId === action.payload.passengerId);
+
+			const rows = state[flightIndexU].rows;
+			const oldUpdateSeats = {
+				flightId: flightIndexU,
+				rows: [
+					...rows.map((r) => {
+						return r.rowId === action.payload.oldSelectedRow - 1
+							? {
+									...r,
+									seats: r.seats.map((s) => {
+										return s.id === oldIndexU + 1
+											? { ...s, passengerId: "", isReserved: false }
+											: s;
+									}),
+							  }
+							: r;
+					}),
+				],
+			};
+			state = [
+				...state.slice(0, action.payload.flightId - 1),
+				oldUpdateSeats,
+				...state.slice(action.payload.flightId),
+			];
+			const json = {
+				id: action.payload.id,
+				number: action.payload.seatNumber,
+				isReserved: action.payload.isReserved,
+				passengerId: action.payload.passengerId,
+			};
+			const indexU = state[flightIndexU].rows[
+				action.payload.selectedRow - 1
+			].seats.findIndex((f) => f.id === action.payload.id);
+			const newRows = state[flightIndexU].rows;
+
+			const updateSeats = {
+				flightId: flightIndexU,
+				rows: [
+					...newRows.map((r) => {
+						return r.rowId === action.payload.selectedRow - 1
+							? {
+									...r,
+									seats: r.seats.map((s) => {
+										return s.id === indexU + 1 ? json : s;
+									}),
+							  }
+							: r;
+					}),
+				],
+			};
+
+			return [
+				...state.slice(0, action.payload.flightId - 1),
+				updateSeats,
+				...state.slice(action.payload.flightId),
 			];
 		},
 	},
 });
 // Action creators are generated for each case reducer function
-export const { addSeat,removeSeat } = seatSlice.actions;
+export const { addSeat, removeSeat, changeSeat } = seatSlice.actions;
 
 export const selectSeat = (state) => state;
 

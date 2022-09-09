@@ -1,6 +1,5 @@
 import "./Admin/Common/Header.css";
 import { Route, Switch } from "react-router-dom";
-import PassengersList from "./Admin/Passenger/PassengersList";
 import PageNotFound from "./PageNotFound";
 import AncillaryServices from "./Admin/AncillaryService/AncillaryServices";
 import checkIn from "./AirlineStaff/CheckIn/checkIn";
@@ -17,6 +16,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useHistory } from "react-router-dom";
 import WelcomPage from "./WelcomePage";
+import Passenger from "./Admin/Passenger/Passengers";
 
 const MainPage = () => {
 	return (
@@ -28,7 +28,7 @@ const MainPage = () => {
 			<Switch>
 				<Route path='/header' component={Header} />
 				<Route path='/home' component={Home} />
-				<Route path='/passengers' component={PassengersList} />
+				<Route path='/passengers' component={Passenger} />
 				<Route path='/aucillaryServices' component={AncillaryServices} />
 				<Route path='/flightHeader' component={FlightHeader} />
 				<Route path='/flightHome' component={FlightHome} />

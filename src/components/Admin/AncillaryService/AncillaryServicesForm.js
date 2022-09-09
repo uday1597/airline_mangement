@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addAncillaryService } from "../../../features/ancillaryService/ancillaryServicesSlice";
 import ToastServive from "react-material-toast";
 import { addFlightAncillaryService } from "../../../features/flight/flightSlice";
+import { Button, TextField } from "@material-ui/core";
 
 function AncillaryServicesForm(props) {
 	const toast = ToastServive.new({
@@ -20,7 +20,7 @@ function AncillaryServicesForm(props) {
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
-				setInputName("");
+		setInputName("");
 
 		if (!props.edit) {
 			const obj = {
@@ -35,29 +35,28 @@ function AncillaryServicesForm(props) {
 				AncillaryServices:
 					props.service === "Ancillary services"
 						? [
-							...props.flightData.AncillaryServices,
-							{ id: Math.floor(Math.random() * 1000), Service: inputName },
-						]
+								...props.flightData.AncillaryServices,
+								{ id: Math.floor(Math.random() * 1000), Service: inputName },
+						  ]
 						: props.flightData.AncillaryServices,
 				SpecialMeals:
 					props.service === "Special meals"
 						? [
-							...props.flightData.SpecialMeals,
-							{ id: Math.floor(Math.random() * 1000), Service: inputName },
-						]
+								...props.flightData.SpecialMeals,
+								{ id: Math.floor(Math.random() * 1000), Service: inputName },
+						  ]
 						: props.flightData.SpecialMeals,
 				ShoppingItems:
 					props.service === "Shopping items"
 						? [
-							...props.flightData.ShoppingItems,
-							{ id: Math.floor(Math.random() * 1000), Service: inputName },
-						]
+								...props.flightData.ShoppingItems,
+								{ id: Math.floor(Math.random() * 1000), Service: inputName },
+						  ]
 						: props.flightData.ShoppingItems,
 			};
 			dispatch(addFlightAncillaryService(obj));
 			toast.success("Ancillary Service Added!!!");
-		}
-		else {
+		} else {
 			props.onSubmit({
 				data: props.edit.data,
 				editedId: props.edit.id,
@@ -73,29 +72,33 @@ function AncillaryServicesForm(props) {
 		<form className='passenger-form' onSubmit={handleSubmit}>
 			{props.edit ? (
 				<>
-					<input
-						type='text'
-						placeholder='Update Ancillary Service'
-						value={inputName}
+					<br />
+					<TextField
+						label='Ancillry Services'
+						helperText='Update Ancillary Service'
+						defaultValue={inputName}
 						name='name'
-						className='passenger-input edit'
 						onChange={handleNameChange}
+						style={{ paddingRight: "50px" }}
 					/>
-					<button className='passenger-button edit'>
+					<Button onClick={handleSubmit} className='passenger-button'>
 						Update Ancillary Service
-					</button>
+					</Button>
 				</>
 			) : (
 				<>
-					<input
-						type='text'
-						placeholder='Enter Ancillary Service'
-						value={inputName}
+					<br />
+					<TextField
+						label='Ancillry Services'
+						helperText='Enter Ancillary Service'
+						defaultValue={inputName}
 						name='name'
-						className='passenger-input'
 						onChange={handleNameChange}
+						style={{ paddingRight: "20px" }}
 					/>
-					<button className='passenger-button'>Add Ancillary Service</button>
+					<Button onClick={handleSubmit} className='passenger-button'>
+						Add Ancillary Service
+					</Button>
 				</>
 			)}
 		</form>

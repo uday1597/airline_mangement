@@ -1,0 +1,315 @@
+import React, { useState } from "react";
+import data from "../../../data";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SeatPicker from "react-seat-picker";
+import { useSelector, useDispatch } from "react-redux";
+import { selectPassenger } from "../../../features/passenger/passengerSlice";
+import "./checkIn.css";
+import Button from "@mui/material/Button";
+import ToastServive from "react-material-toast";
+import { updatePassengers } from "../../../features/passenger/passengerSlice";
+import { Grid } from "@mui/material";
+import Box from "@mui/material/Box";
+import {
+	selectSeat,
+	addSeat,
+	removeSeat,
+} from "../../../features/seat/seatSlice";
+import selectSeatForPassenger from "./AirlineStaff/CheckIn/SelectSeatForPassenger";
+
+const checkIn = () => {
+	const rows = useSelector(selectSeat);
+	const dispatch = useDispatch();
+
+	const toast = ToastServive.new({
+		place: "topRight",
+		duration: 2,
+		maxCount: 8,
+	});
+	const passengerList = useSelector(selectPassenger);
+	const [select, setSelect] = useState(0);
+	const [flightId, setFlightId] = useState(0);
+	const [route, setRoute] = useState();
+	const [passenger, setPassenger] = useState("");
+	console.log(passengerList);
+
+	const handleCheckIn = (event, param, flightData) => {
+		setFlightId(flightData.id);
+		setRoute(flightData.from + " - " + flightData.to);
+		const updatedParam = { ...param, seat: "" };
+		setPassenger(updatedParam);
+		if (param.seat !== undefined) {
+			if (param.seat !== "") {
+				addSeatCallback("", "", 0, true, param);
+				toast.info(`Removed seat for  ${param.name}`);
+			} else {
+				setSelect(1);
+				toast.info(`Select a seat for  ${param.name}`);
+			}
+		} else {
+			setSelect(1);
+			toast.info(`Select a seat for  ${param.name}`);
+		}
+	};
+	const handleChangeSeat = (event, param) => {
+		addSeatCallback("", "", 0, true, param);
+		setSelect(1);
+		toast.info(`Change seat for  ${param.name}`);
+	};
+
+	const addSeatCallback = (
+		row,
+		number,
+		id,
+		update = false,
+		updatedPassenger
+	) => {
+		if (update) {
+			const json = {
+				editedId: updatedPassenger.id,
+				id: updatedPassenger.id,
+				name: updatedPassenger.name,
+				pass: updatedPassenger.pass,
+				address: updatedPassenger.address,
+				dob: updatedPassenger.dob,
+				seat: "",
+			};
+			dispatch(updatePassengers(json));
+			const seats = updatedPassenger.seat.split(" ");
+			const removeJson = {
+				id: updatedPassenger.id,
+				selectedRow: seats[0],
+			};
+			dispatch(removeSeat(removeJson));
+		} else {
+			const json = {
+				editedId: passenger.id,
+				id: passenger.id,
+				name: passenger.name,
+				pass: passenger.pass,
+				address: passenger.address,
+				dob: passenger.dob,
+				seat: row + " " + number,
+				flightId: flightId,
+				route: route,
+			};
+			dispatch(updatePassengers(json));
+
+			const seatJson = {
+				id: id,
+				selectedRow: row,
+				seatNumber: number,
+				isReserved: true,
+				passengerId: passenger.id,
+			};
+			dispatch(addSeat(seatJson));
+			toast.info(`Added ${row + " " + number} seat for  ${passenger.name}`);
+		}
+		setSelect(0);
+	};
+
+	const filterMethod = (value) => {
+		const json = {
+			passengerList,
+			filter: value,
+		};
+		dispatch(filterPassenger(json));
+	};
+
+	return (
+		<div className='homepage'>
+			<div className='jumbotron'>
+				<h1 style={{ textAlign: "center" }}>Manage Check In services</h1>
+				{data.map((data, key) => {
+					return (
+						<div>
+							<Accordion>
+								<AccordionSummary
+									expandIcon={<ExpandMoreIcon />}
+									aria-controls='panel1a-content'
+									id='panel1a-header'>
+									<Typography>
+										<h4 style={{ textAlign: "left" }}>
+											{data.from +
+												" - " +
+												data.to +
+												" , Departure: " +
+												data.Departure +
+												" " +
+												data.time}
+										</h4>
+									</Typography>
+								</AccordionSummary>
+								<AccordionDetails>
+									<Typography>
+										<selectSeatForPassenger />
+										<div className='App'>
+											<SeatPicker
+												addSeatCallback={addSeatCallback}
+												rows={rows.seat}
+												maxReservableSeats={select}
+												visible
+												loading
+												selectedByDefault
+											/>
+										</div>
+										<br />
+										{passengerList.passenger.length === 0 ? (
+											<></>
+										) : (
+											<>
+												<div className='filter'>
+													<div style={{ color: "white" }}>
+														Filter passengers by below
+													</div>{" "}
+													<br />
+												</div>
+												<div className='filter'>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("all");
+														}}>
+														All
+													</button>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("checkIn");
+														}}>
+														Checked In
+													</button>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("available");
+														}}>
+														Not Checked In
+													</button>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("wheel");
+														}}>
+														Wheel Chair
+													</button>
+													<button
+														className='filter-button edit'
+														onClick={() => {
+															filterMethod("infant");
+														}}>
+														Infant
+													</button>
+												</div>
+											</>
+										)}
+										{passengerList.passenger.map((passenger, key) => (
+											<div>
+												<Box sx={{ flexGrow: 1 }}>
+													<Grid
+														container
+														spacing={{ xs: 11, md: 1 }}
+														columns={{ xs: 0, sm: 0, md: 0 }}>
+														<div key={key} className='passenger-row'>
+															Name: {passenger.name}
+															<br />
+															Ancillary Services:{" "}
+															{passenger.ancillaryServices !== undefined
+																? passenger.ancillaryServices.join(", ")
+																: ""}
+															<br />
+															Meal Preference: {passenger.mealPreference}
+															<br />
+															Shopping request: {passenger.shopRequest}
+															<br />
+															Seat No: {passenger.seat}{" "}
+															{passenger.route !== undefined &&
+																"	(" + passenger.route + ")"}
+															<Grid item xs={2} sm={4} md={4}>
+																<div
+																	style={{
+																		transform: [{ rotate: "90deg" }],
+																	}}>
+																	{!passenger.seat && (
+																		<Button
+																			style={{ width: "135px" }}
+																			key={passenger.id}
+																			variant='contained'
+																			color='success'
+																			onClick={(event) =>
+																				handleCheckIn(event, passenger, data)
+																			}>
+																			<p>Check In</p>
+																		</Button>
+																	)}
+																	{passenger.seat &&
+																		passenger.flightId !== data.id && (
+																			<h4 style={{ color: "greenyellow" }}>
+																				To check in {passenger.name} to current
+																				flight{" "}
+																				{" (" +
+																					data.from +
+																					" - " +
+																					data.to +
+																					")"}
+																				<br />
+																				Undo check in from already checked in
+																				flight {" (" + passenger.route + ")"}
+																			</h4>
+																		)}
+																	<br />
+																	{passenger.seat && (
+																		<>
+																			<Button
+																				key={passenger.id}
+																				variant='contained'
+																				disabled={
+																					passenger.flightId !== data.id
+																				}
+																				onClick={(event) =>
+																					handleCheckIn(event, passenger, data)
+																				}>
+																				<p>Undo CheckIn</p>
+																			</Button>{" "}
+																			<br />
+																			<br />
+																			<Button
+																				style={{ width: "135px" }}
+																				key={passenger.id}
+																				variant='contained'
+																				color='secondary'
+																				disabled={
+																					passenger.flightId !== data.id
+																				}
+																				onClick={(event) =>
+																					handleChangeSeat(event, passenger)
+																				}>
+																				<p>Change Seat</p>
+																			</Button>
+																		</>
+																	)}
+																</div>
+															</Grid>
+														</div>
+													</Grid>
+												</Box>
+												<br />
+											</div>
+										))}
+									</Typography>
+								</AccordionDetails>
+							</Accordion>
+							<br />
+						</div>
+					);
+				})}
+			</div>
+		</div>
+	);
+};
+
+export default checkIn;

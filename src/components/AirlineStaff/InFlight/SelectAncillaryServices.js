@@ -55,9 +55,19 @@ const SelectAncillaryServices = (props) => {
 	});
 	const dispatch = useDispatch();
 	const theme = useTheme();
-	const [ancillary, setAncillary] = useState(props.passenger.ancillaryServices);
-	const [meal, setMeal] = useState(props.passenger.mealPreference);
-	const [shop, setShop] = useState(props.passenger.shopRequest);
+	const [ancillary, setAncillary] = useState(
+		props.passenger.ancillaryServices !== undefined
+			? props.passenger.ancillaryServices
+			: []
+	);
+	const [meal, setMeal] = useState(
+		props.passenger.mealPreference !== undefined
+			? props.passenger.mealPreference
+			: []
+	);
+	const [shop, setShop] = useState(
+		props.passenger.shopRequest !== undefined ? props.passenger.shopRequest : []
+	);
 	const handleAncillaryChange = (event) => {
 		const {
 			target: { value },
@@ -96,16 +106,21 @@ const SelectAncillaryServices = (props) => {
 			address: params.address,
 			dob: params.dob,
 			seat: params.seat,
+			flightId: params.flightId,
+			route: params.route,
 			ancillaryServices: ancillary,
 			mealPreference: meal,
+			seatPref: params.seatPref,
+
 			shopRequest: shop,
 		};
 		dispatch(saveAncillaryForPassenger(json));
+		setOpen(false);
 		toast.success("Updated Ancillary Services for " + params.name);
 	};
 
 	return (
-		<div>			
+		<div>
 			<Button variant='contained' color='success' onClick={handleClickOpen}>
 				Add Ancillary Services
 			</Button>

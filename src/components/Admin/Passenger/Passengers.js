@@ -8,6 +8,15 @@ import {
 	filterPassenger,
 } from "../../../features/passenger/passengerSlice";
 import ToastServive from "react-material-toast";
+import Grid from "@mui/material/Grid";
+import { Paper } from "@material-ui/core";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 const Passenger = () => {
 	const toast = ToastServive.new({
@@ -15,8 +24,15 @@ const Passenger = () => {
 		duration: 2,
 		maxCount: 8,
 	});
+	const [value, setValue] = React.useState("all");
+
 	const passengerList = useSelector(selectPassenger);
 	const dispatch = useDispatch();
+	const displayPassengers = passengerList.passenger.map((p) => {
+		if (p.display) {
+			return p;
+		}
+	});
 
 	const [edit, setEdit] = useState({
 		editedId: null,
@@ -33,7 +49,11 @@ const Passenger = () => {
 			name: value.name,
 			pass: value.pass,
 			address: value.address,
-			dob: value.dob,
+			dob: value.dob !== null ? "" + value.dob.$d : "",
+			seat: "",
+			flightId: "",
+			route: "",
+			seatPref: value.seatPref,
 		};
 		dispatch(updatePassengers(json));
 		toast.info("Passenger Updated.");
@@ -44,75 +64,127 @@ const Passenger = () => {
 			passValue: "",
 			addressValue: "",
 			dobValue: "",
+			seatPrefValue: "",
 		});
 	};
-	const filterMethod = (value) => {
+	const filterMethod = (event) => {
+		setValue(event.target.value);
 		const json = {
-			passengerList,
-			filter: value,
+			filter: event.target.value,
 		};
 		dispatch(filterPassenger(json));
 	};
-
 	if (edit.id) {
-		return <PassengersForm edit={edit} onSubmit={submitUpdate} />;
+		return (
+			<Dialog open='true'>
+				<DialogContent>
+					<PassengersForm edit={edit} onSubmit={submitUpdate} />{" "}
+				</DialogContent>
+			</Dialog>
+		);
 	}
+	const addPassenger = () => {};
+
 	return (
-		<div>
-			<div className='filter'>
-				Filter passengers by missing mandatory requirements <br />
-			</div>
-			<div className='filter'>
-				<button
-					className='filter-button edit'
-					onClick={() => {
-						filterMethod("all");
-					}}>
-					All
-				</button>
-				<button
-					className='filter-button edit'
-					onClick={() => {
-						filterMethod("pass");
-					}}>
-					Passport
-				</button>
-				<button
-					className='filter-button edit'
-					onClick={() => {
-						filterMethod("address");
-					}}>
-					Address
-				</button>
-				<button
-					className='filter-button edit'
-					onClick={() => {
-						filterMethod("dob");
-					}}>
-					Date of birth
-				</button>
-			</div>
-			{passengerList.passenger.map((passenger, key) => (
-				<div key={key} className='passenger-row'>
-					{passenger.name} {passenger.ancillary} {passenger.seat}{" "}
-					{passenger.dob}
-					<div className='icons'>
-						<TiEdit
-							onClick={() =>
-								setEdit({
-									editedId: null,
-									id: passenger.id,
-									nameValue: passenger.name,
-									passValue: passenger.pass,
-									addressValue: passenger.address,
-									dobValue: passenger.dob,
-								})
-							}
-							className='edit-icon'
-						/>
+		<div className='passenger-app'>
+			<h1>Manage Passengers</h1>
+			<Grid container spacing={2}>
+				<Grid item xs={4}>
+					<PassengersForm onSubmit={addPassenger} />
+				</Grid>
+				<Grid item xs={8}>
+					<div style={{ paddingRight: "35px" }}>
+						<div className='filter'>
+							<FormControl>
+								<FormLabel id='demo-radio-buttons-group-label'>
+									<h4 style={{ color: "white", paddingLeft: "60px" }}>
+										Filter passengers by missing mandatory requirements
+									</h4>
+								</FormLabel>
+								<RadioGroup
+									row
+									sx={{
+										"& .MuiSvgIcon-root": {
+											fontSize: 15,
+										},
+										paddingLeft: "120px",
+									}}
+									value={value}
+									onChange={filterMethod}
+									defaultValue='all'
+									name='radio-buttons-group'>
+									<FormControlLabel
+										value='all'
+										control={<Radio />}
+										label='All'
+									/>
+									<FormControlLabel
+										value='pass'
+										control={<Radio />}
+										label='Passport'
+									/>
+									<FormControlLabel
+										value='address'
+										control={<Radio />}
+										label='Address'
+									/>
+									<FormControlLabel
+										value='dob'
+										control={<Radio />}
+										label='Date of birth'
+									/>
+								</RadioGroup>
+							</FormControl>
+						</div>
 					</div>
-				</div>
-			))}
+
+					<Grid item xs={12}>
+						<h4 style={{ color: "white", textAlign: "left", padding: "20px" }}>
+							Paasengers List
+						</h4>
+						<Paper style={{ maxHeight: 365, overflow: "auto", maxWidth: 860 }}>
+							<br />
+							{displayPassengers
+								.filter((d) => d !== undefined)
+								.map((passenger, key) => (
+									<div key={key} className='passenger-row'>
+										<div style={{ textAlign: "left", paddingLeft: "20px" }}>
+											Name: {passenger.name}
+											<br />
+											Passport Number: {passenger.pass}
+											<br />
+											Address: {passenger.address}
+											<br />
+											Ancillary: {passenger.ancillaryServices.join(", ")}
+											<br />
+											Seat Number: {passenger.seat}
+											<br />
+											Seat Preference: {passenger.seatPref}
+											<br />
+											Date of birth: {passenger.dob}
+										</div>
+										<div className='icons'>
+											<TiEdit
+												onClick={() =>
+													setEdit({
+														editedId: null,
+														id: passenger.id,
+														nameValue: passenger.name,
+														passValue: passenger.pass,
+														addressValue: passenger.address,
+														dobValue: passenger.dob,
+														seatPrefValue: passenger.seatPref,
+													})
+												}
+												className='edit-icon'
+											/>
+										</div>
+									</div>
+								))}
+						</Paper>
+					</Grid>
+				</Grid>
+			</Grid>
 		</div>
 	);
 };

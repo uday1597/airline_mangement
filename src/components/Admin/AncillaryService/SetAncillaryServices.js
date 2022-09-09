@@ -25,13 +25,13 @@ import {
 } from "../../../features/flight/flightSlice";
 import { addFlightAncillaryService } from "../../../features/flight/flightSlice";
 
-const ITEM_HEIGHT = 48;
+const ITEM_HEIGHT = 120;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
 	PaperProps: {
 		style: {
 			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
+			width: 120,
 		},
 	},
 };
@@ -223,7 +223,11 @@ const SetAncillaryServices = (props) => {
 	};
 	return (
 		<div>
-			<Button variant='contained' color='success' onClick={handleClickOpen} style={{alignSelf:"center"}}>
+			<Button
+				variant='contained'
+				color='success'
+				onClick={handleClickOpen}
+				style={{ alignSelf: "center" }}>
 				Add Ancillary Services
 			</Button>
 			<Dialog
@@ -240,6 +244,7 @@ const SetAncillaryServices = (props) => {
 				</DialogTitle>
 				<DialogContent>
 					<DialogContentText id='alert-dialog-description'>
+						<br />
 						<FormControl sx={{ m: 1, minWidth: 230 }} size='small'>
 							<InputLabel id='ancillary'>Select an option</InputLabel>
 							<Select
@@ -272,6 +277,7 @@ const SetAncillaryServices = (props) => {
 								))}
 							</Select>
 						</FormControl>
+						
 						{service && (
 							<AncillaryServicesForm
 								flightData={props.data}
@@ -279,6 +285,7 @@ const SetAncillaryServices = (props) => {
 								service={service}
 							/>
 						)}
+						<br />
 						{ancillaryServices &&
 							props.data.AncillaryServices.map((ancillary, key) => (
 								<div key={key} className='passenger-row'>
