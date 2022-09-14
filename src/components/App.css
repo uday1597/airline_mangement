@@ -17,9 +17,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	justify-content: left;
-	background: #54574d;
 	text-align: center;
-	padding-bottom: 63px;
 }
 
 h1 {
@@ -187,4 +185,8 @@ h3 {
 	padding-bottom: 50px;
 	border: 1px solid #888;
 	width: 100%;
+}
+
+.passenger-image{
+	background-image: url(/public/image/download.jfif);
 }

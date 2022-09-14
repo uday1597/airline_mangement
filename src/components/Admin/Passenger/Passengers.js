@@ -87,6 +87,7 @@ const Passenger = () => {
 
 	return (
 		<div className='passenger-app'>
+		<div className='passenger-image'>
 			<h1>Manage Passengers</h1>
 			<Grid container spacing={2}>
 				<Grid item xs={4}>
@@ -185,6 +186,7 @@ const Passenger = () => {
 					</Grid>
 				</Grid>
 			</Grid>
+		</div>
 		</div>
 	);
 };

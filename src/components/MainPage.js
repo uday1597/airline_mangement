@@ -23,7 +23,7 @@ const MainPage = () => {
 		<div>
 			{/* <WelcomPage/> */}
 			<Header />
-			<FlightHeader />
+			{/* <FlightHeader /> */}
 
 			<Switch>
 				<Route path='/header' component={Header} />
