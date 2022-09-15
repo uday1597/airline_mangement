@@ -50,9 +50,8 @@ function PassengersForm(props) {
     props.edit ? props.edit.dobValue : null
   );
   const [inputSeatPref, setInputSeatPref] = useState(
-    props.edit ? props.edit.dobValue : ""
+    props.edit ? props.edit.seatPrefValue : ""
   );
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const obj = {
@@ -71,21 +70,22 @@ function PassengersForm(props) {
     if (!props.edit) {
       dispatch(addPassenger(obj));
       toast.success("Passenger Added!!!");
+    } else {
+      props.onSubmit({
+        id: Math.floor(Math.random() * 1000),
+        name: inputName,
+        pass: inputPass,
+        address: inputAddress,
+        dob: inputDob,
+        seatPref: inputSeatPref,
+      });
     }
-    props.onSubmit({
-      id: Math.floor(Math.random() * 1000),
-      name: inputName,
-      pass: inputPass,
-      address: inputAddress,
-      dob: inputDob,
-      seatPref: inputSeatPref,
-    });
     setInputName("");
     setInputPass("");
     setInputAddress("");
     setInputDob("");
+    setInputSeatPref("");
   };
-
   return (
     <div>
       <form className="passenger-form" onSubmit={handleSubmit} elevation={24}>
@@ -96,8 +96,10 @@ function PassengersForm(props) {
                 sx={{
                   p: 2,
                   bgcolor: "background.default",
-                  width: "350px",
+                  width: "335px",
+                  height:"459px",
                   paddingLeft: "50px",
+                  borderRadius:"5px"
                 }}
               >
                 <h4>Add a Passenger</h4>
@@ -247,6 +249,8 @@ function PassengersForm(props) {
                 helperText="Update Date of Birth"
                 name="dob"
                 renderInput={(params) => <TextField {...params} />}
+                minDate={dayjs(minDate)}
+                maxDate={dayjs(maxDate)}
               />
             </LocalizationProvider>
             <br />
@@ -264,7 +268,7 @@ function PassengersForm(props) {
                 }}
                 row
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue=""
+                defaultValue={inputSeatPref}
                 onChange={(newValue) => {
                   setInputSeatPref(newValue.target.value);
                 }}
@@ -284,14 +288,12 @@ function PassengersForm(props) {
                 />
               </RadioGroup>
             </FormControl>
-            <br />
-            <br />
             <div style={{ paddingLeft: "100px" }}>
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={handleSubmit}
-                disabled={!enable&&!inputName}
+                disabled={!enable && !inputName}
               >
                 Update Passenger
               </Button>
@@ -299,6 +301,7 @@ function PassengersForm(props) {
           </>
         )}
       </form>
+      <br/>
     </div>
   );
 }

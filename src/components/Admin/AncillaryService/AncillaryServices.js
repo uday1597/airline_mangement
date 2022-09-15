@@ -1,52 +1,68 @@
-import React, { useState } from "react";
+import React from "react";
 import { selectFlight } from "../../../features/flight/flightSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import "react-dropdown/style.css";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SetAncillaryServices from "./SetAncillaryServices";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+const lightTheme = createTheme({ palette: { mode: "light" } });
+import Box from "@mui/material/Box";
 
 const AncillaryServices = () => {
-	const data = useSelector(selectFlight);
-	return (
-		<div className='homepage'>
-			<div className='jumbotron'>
-				<h1 style={{ textAlign: "center" }}>
-					Manage Ancillary Service per Flight
-				</h1>
-				{data.flight.map((d) => {
-					return (
-						<>
-							<Accordion>
-								<AccordionSummary
-									expandIcon={<ExpandMoreIcon />}
-									aria-controls='panel1a-content'
-									id='panel1a-header'>
-									<Typography>
-										<h4 style={{ textAlign: "left" }}>
-											{d.from +
-												" - " +
-												d.to +
-												" , Departure: " +
-												d.Departure +
-												" " +
-												d.time}
-										</h4>
-									</Typography>
-								</AccordionSummary>
-								<div style={{ textAlign: "center",paddingBottom:"20px" }}>
-									<SetAncillaryServices data={d} />
-								</div>
-							</Accordion>
-							<br />
-						</>
-					);
-				})}
-			</div>
-		</div>
-	);
+  const data = useSelector(selectFlight);
+  return (
+    <div className="passenger-app">
+      <div className="passenger-image">
+        <h1 style={{ textAlign: "center" }}>
+          Manage Ancillary Service per Flight
+        </h1>
+        <div style={{ paddingLeft: "100px", paddingRight: "100px" }}>
+          {data.flight.map((d) => {
+            return (
+              <>
+                <ThemeProvider theme={lightTheme}>
+                  <Box
+                    mt={2}
+                    sx={{
+                      p: 1,
+                      bgcolor: "background.default",
+                      border: "lightseagreen",
+                    }}
+                    borderRadius="5px"
+                  >
+                    <div>
+                      <h4
+                        style={{
+                          textAlign: "left",
+                          paddingTop: "20px",
+                          paddingLeft: "20px",
+                        }}
+                      >
+                        {d.from + " - " + d.to}
+                        <br />
+                        {"Departure: " + d.Departure + " " + d.time}
+                      </h4>
+                      <div
+                        style={{
+                          textAlign: "right",
+                          paddingRight: "20px",
+                          paddingBottom: "5px",
+                        }}
+                      >
+                        <SetAncillaryServices data={d} />
+                      </div>
+                    </div>
+                  </Box>
+                  <br />
+                </ThemeProvider>
+              </>
+            );
+          })}
+        </div>
+        <br />
+        <br />
+      </div>
+    </div>
+  );
 };
 
 export default AncillaryServices;
