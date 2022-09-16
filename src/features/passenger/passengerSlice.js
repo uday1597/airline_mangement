@@ -24,10 +24,10 @@ export const passengerSlice = createSlice({
 				flightId: action.payload.flightId,
 				route: action.payload.route,
 				display: true,
+				ancillaryServices: action.payload.ancillaryServices,
 				seatPref: action.payload.seatPref,
-				ancillaryServices: [],
-				mealPreference: [],
-				shopRequest: [],
+				mealPreference: action.payload.mealPreference,
+				shopRequest: action.payload.shopRequest,
 			};
 			const updatedPassengers = {
 				...json,
@@ -101,6 +101,7 @@ export const passengerSlice = createSlice({
 				address: action.payload.address,
 				dob: action.payload.dob,
 				seat: action.payload.seat,
+				seatPref: action.payload.seatPref,
 				display: true,
 				flightId: action.payload.flightId,
 				route: action.payload.route,

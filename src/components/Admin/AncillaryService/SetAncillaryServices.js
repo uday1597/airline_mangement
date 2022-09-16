@@ -24,7 +24,6 @@ import {
   deleteFlightSpecialMeals,
 } from "../../../features/flight/flightSlice";
 import { addFlightAncillaryService } from "../../../features/flight/flightSlice";
-
 const ITEM_HEIGHT = 120;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -286,7 +285,7 @@ const SetAncillaryServices = (props) => {
                 ))}
               </Select>
             </FormControl>
-
+                 
             {service && (
               <AncillaryServicesForm
                 flightData={props.data}
@@ -294,11 +293,11 @@ const SetAncillaryServices = (props) => {
                 service={service}
               />
             )}
-            <br />
+                        <br />
             {service &&
               ancillaryServices &&
               props.data.AncillaryServices.map((ancillary, key) => (
-                <div key={key} className="passenger-row">
+                <div key={key} className="passenger-row" style={{padding:"5px"}}>
                   {ancillary.Service}
                   <div className="icons">
                     <RiCloseCircleLine
@@ -321,7 +320,7 @@ const SetAncillaryServices = (props) => {
             {service &&
               specialMeals &&
               props.data.SpecialMeals.map((special, key) => (
-                <div key={key} className="passenger-row">
+                <div key={key} className="passenger-row" style={{padding:"5px"}}>
                   {special.Service}
                   <div className="icons">
                     <RiCloseCircleLine
@@ -344,7 +343,7 @@ const SetAncillaryServices = (props) => {
             {service &&
               shoppingItems &&
               props.data.ShoppingItems.map((shopping, key) => (
-                <div key={key} className="passenger-row">
+                <div key={key} className="passenger-row" style={{padding:"5px"}}>
                   {shopping.Service}
                   <div className="icons">
                     <RiCloseCircleLine

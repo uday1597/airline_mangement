@@ -76,6 +76,9 @@ export const seatSlice = createSlice({
 			const flightIndexU = [...state].findIndex(
 				(flight) => flight.flightId === action.payload.flightId - 1
 			);
+			console.log(state[flightIndexU].rows[
+				action.payload.oldSelectedRow - 1
+			]);
 			const oldIndexU = state[flightIndexU].rows[
 				action.payload.oldSelectedRow - 1
 			].seats.findIndex((f) => f.passengerId === action.payload.passengerId);

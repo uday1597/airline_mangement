@@ -41,6 +41,8 @@ const Passenger = () => {
     passValue: "",
     addressValue: "",
     dobValue: "",
+    seatPrefValue: "",
+    passengerValue: {},
   });
   const submitUpdate = (value) => {
     const json = {
@@ -55,10 +57,13 @@ const Passenger = () => {
             ? value.dob
             : "" + value.dob.$d
           : "",
-      seat: "",
-      flightId: "",
-      route: "",
       seatPref: value.seatPref,
+      flightId: value.flightId,
+      route: value.route,
+      seat: value.seat,
+      ancillaryServices: value.ancillaryServices,
+      mealPreference: value.mealPreference,
+      shopRequest: value.shopRequest,
     };
     dispatch(updatePassengers(json));
     toast.info("Passenger Updated.");
@@ -70,6 +75,7 @@ const Passenger = () => {
       addressValue: "",
       dobValue: "",
       seatPrefValue: "",
+      passengerValue: {},
     });
   };
   const filterMethod = (event) => {
@@ -152,7 +158,12 @@ const Passenger = () => {
                 Paasengers List
               </h4>
               <Paper
-                style={{ maxHeight: 330, overflow: "auto", maxWidth: 860, borderRadius:"5px" }}
+                style={{
+                  maxHeight: 330,
+                  overflow: "auto",
+                  maxWidth: 860,
+                  borderRadius: "5px",
+                }}
               >
                 <br />
                 {!displayPassengers.length > 0 ? (
@@ -166,7 +177,8 @@ const Passenger = () => {
                     Add Passengers
                   </h4>
                 ) : (
-                  displayPassengers.reverse()
+                  displayPassengers
+                    .reverse()
                     .filter((d) => d !== undefined)
                     .map((passenger, key) => (
                       <div key={key} className="passenger-row">
@@ -196,6 +208,7 @@ const Passenger = () => {
                                 addressValue: passenger.address,
                                 dobValue: passenger.dob,
                                 seatPrefValue: passenger.seatPref,
+                                passengerValue: passenger,
                               })
                             }
                             className="edit-icon"

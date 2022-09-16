@@ -52,6 +52,8 @@ function PassengersForm(props) {
   const [inputSeatPref, setInputSeatPref] = useState(
     props.edit ? props.edit.seatPrefValue : ""
   );
+  console.log(props.edit)
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const obj = {
@@ -72,12 +74,18 @@ function PassengersForm(props) {
       toast.success("Passenger Added!!!");
     } else {
       props.onSubmit({
-        id: Math.floor(Math.random() * 1000),
+        id: props.edit ? props.edit.passengerValue.id : "",
         name: inputName,
         pass: inputPass,
         address: inputAddress,
         dob: inputDob,
         seatPref: inputSeatPref,
+        flightId: props.edit ? props.edit.passengerValue.flightId : "",
+				route:  props.edit ? props.edit.passengerValue.route : "",
+        seat:props.edit ? props.edit.passengerValue.seat : "",
+				ancillaryServices: props.edit ? props.edit.passengerValue.ancillaryServices : [],
+				mealPreference: props.edit ? props.edit.passengerValue.mealPreference : [],
+				shopRequest: props.edit ? props.edit.passengerValue.shopRequest : [],
       });
     }
     setInputName("");

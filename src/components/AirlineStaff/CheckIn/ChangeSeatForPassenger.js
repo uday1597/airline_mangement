@@ -51,7 +51,11 @@ const ChangeSeatForPassenger = (props) => {
 			dob: props.passenger.dob,
 			seat: row + " " + number,
 			flightId: props.data.id,
-			route: props.data.from + " - " + props.data.to,
+			seatPref: props.passenger.seatPref,
+			route: props.data.from + " - " + props.data.to,			
+			ancillaryServices: props.passenger.ancillaryServices,
+			mealPreference: props.passenger.mealPreference,
+			shopRequest: props.passenger.shopRequest,
 		};
 		dispatch(updatePassengers(json));
 		const seats = props.passenger.seat.split(" ");
