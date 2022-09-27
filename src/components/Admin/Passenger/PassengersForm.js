@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addPassenger } from "../../../features/passenger/passengerSlice";
+import { addPassenger,addPassengerAsync } from "../../../features/passenger/passengerSlice";
 import { useDispatch } from "react-redux";
 import ToastServive from "react-material-toast";
 import { Button, TextField } from "@material-ui/core";
@@ -52,7 +52,6 @@ function PassengersForm(props) {
   const [inputSeatPref, setInputSeatPref] = useState(
     props.edit ? props.edit.seatPrefValue : ""
   );
-  console.log(props.edit)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -105,7 +104,7 @@ function PassengersForm(props) {
                   p: 2,
                   bgcolor: "background.default",
                   width: "335px",
-                  height:"459px",
+                  height:"445px",
                   paddingLeft: "50px",
                   borderRadius:"5px"
                 }}

@@ -1,39 +1,30 @@
 body {
-	background: #f0f0f0;
+  background: #f0f0f0;
 }
 
 a {
-	text-decoration: none;
+  text-decoration: none;
 }
 .appTitle {
-	justify-content: right;
-	font-size: large;
-}
-.appMainTitle {
-	text-align: end;
-	justify-content: right;
-	font-size: large;
-		color: rgb(131, 110, 223);
-	padding-block: 10px;
-font-size: medium;
-	background: #fff;
+  justify-content: right;
+  font-size: large;
 }
 .app {
-	display: flex;
-	justify-content: left;
-	color: rgb(131, 110, 223);
-	padding-block: 10px;
-	font-size: medium;
-	background: #fff;
+  display: flex;
+  justify-content: left;
+  color: rgb(131, 110, 223);
+  padding-block: 15px;
+  font-size: medium;
+  background: #fff;
 }
 .nav a {
-	border-radius: 4px;
-	padding: 6px 10px;
-	margin-right: 10px;
-	color: #150225;
+  border-radius: 44px;
+  padding: 6px 10px;
+  margin-right: 10px;
+  color: #150225;
 }
 
 .nav a.active {
-	color: rgb(233, 229, 229);
-	background:  rgb(131, 110, 223);
+  color: rgb(233, 229, 229);
+  background: rgb(131, 110, 223);
 }

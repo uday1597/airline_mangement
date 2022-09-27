@@ -71,207 +71,209 @@ const checkIn = () => {
   return (
     <div className="passenger-app">
       <div className="passenger-image">
-        <h1 style={{ textAlign: "center" }}>Manage Check In services</h1>
-        {data.map((data) => {
-          return (
-            <div style={{ paddingLeft: "100px", paddingRight: "100px" }}>
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>
-                    <h4
-                      style={{
-                        textAlign: "left",
-                        paddingLeft: "20px",
-                      }}
-                    >
-                      {data.from + " - " + data.to}
-                      <br />
-                      {"Departure: " + data.Departure + " " + data.time}
-                    </h4>
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>
-                    <div className="App"></div>
-                    {passengerList.passenger.length === 0 ? (
-                      <>
-                        <h4 style={{ color: "grey" }}>
-                          Add passengers to Check in{" "}
-                        </h4>
-                      </>
-                    ) : (
-                      <>
-                        <div style={{ paddingRight: "35px" }}>
-                          <div className="filter">
-                            <FormControl>
-                              <FormLabel id="demo-radio-buttons-group-label">
-                                <h4
-                                  style={{
-                                    color: "black",
-                                    textAlign: "right",
-                                    paddingRight: "15px",
-                                  }}
-                                >
-                                  Filter passengers by below
-                                </h4>
-                              </FormLabel>
-                              <RadioGroup
-                                row
-                                sx={{
-                                  "& .MuiSvgIcon-root": {
-                                    fontSize: 20,
-                                  },
-                                  color: "black",
-                                }}
-                                value={value}
-                                onChange={filterMethod}
-                                defaultValue="all"
-                                name="radio-buttons-group"
-                              >
-                                <FormControlLabel
-                                  value="all"
-                                  control={<Radio />}
-                                  label="All"
-                                />
-                                <FormControlLabel
-                                  value="check"
-                                  control={<Radio />}
-                                  label="Checked In"
-                                />
-                                <FormControlLabel
-                                  value="notCheck"
-                                  control={<Radio />}
-                                  label="Not Checked In"
-                                />
-                                <FormControlLabel
-                                  value="wheel"
-                                  control={<Radio />}
-                                  label="Wheel Chair"
-                                />
-                                <FormControlLabel
-                                  value="infant"
-                                  control={<Radio />}
-                                  label="Infant"
-                                />
-                              </RadioGroup>
-                            </FormControl>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                    {displayPassengers
-                      .filter((d) => d !== undefined)
-                      .map((passenger, key) => (
-                        <div>
-                          <Box sx={{ flexGrow: 1 }}>
-                            <Grid
-                              container
-                              spacing={{ xs: 11, md: 1 }}
-                              columns={{ xs: 0, sm: 0, md: 0 }}
-                            >
-                              <div key={key} className="passenger-row">
-							  <div style={{ textAlign: "left", paddingLeft: "20px" }}>
-                                  Name: {passenger.name}
-                                  <br />
-                                  Ancillary Services:{" "}
-                                  {passenger.ancillaryServices !== undefined
-                                    ? passenger.ancillaryServices.join(", ")
-                                    : ""}
-                                  <br />
-                                  Meal Preference: {passenger.mealPreference}
-                                  <br />
-                                  Shopping request: {passenger.shopRequest}
-                                  <br />
-                                  Seat No: {passenger.seat}{" "}
-                                  {passenger.route !== undefined &&
-                                    "	(" + passenger.route + ")"}
-                                </div>
-                                <Grid item xs={2} sm={4} md={4}>
-                                  <div
+        <Box
+          mt={1}
+          sx={{
+            p: 1,
+            height: "565px",
+          }}
+        >
+          <h1 style={{ textAlign: "center" }}>Manage Check In services</h1>
+          {data.map((data) => {
+            return (
+              <div style={{ paddingLeft: "100px", paddingRight: "100px" }}>
+                <Accordion>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>
+                      <h4
+                        style={{
+                          textAlign: "left",
+                          paddingLeft: "20px",
+                        }}
+                      >
+                        {data.from + " - " + data.to}
+                        <br />
+                        {"Departure: " + data.Departure + " " + data.time}
+                      </h4>
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                      <div className="App"></div>
+                      {passengerList.passenger.length === 0 ? (
+                        <>
+                          <h4 style={{ color: "grey" }}>
+                            Add passengers to Check in{" "}
+                          </h4>
+                        </>
+                      ) : (
+                        <>
+                          <div style={{ paddingRight: "35px" }}>
+                            <div className="filter">
+                              <FormControl>
+                                <FormLabel id="demo-radio-buttons-group-label">
+                                  <h4
                                     style={{
-                                      transform: [{ rotate: "90deg" }],
+                                      color: "black",
+                                      textAlign: "right",
+                                      paddingRight: "15px",
                                     }}
                                   >
-                                    <SelectSeatForPassenger
-                                      open={false}
-                                      passenger={passenger}
-                                      data={data}
-                                    />
-
-                                    {passenger.seat &&
-                                      passenger.flightId !== data.id && (
-                                        <h4 style={{ color: "greenyellow" }}>
-                                          To check in {passenger.name} to
-                                          current flight{" "}
-                                          {" (" +
-                                            data.from +
-                                            " - " +
-                                            data.to +
-                                            ")"}
-                                          <br />
-                                          Undo check in from already checked in
-                                          flight {" (" + passenger.route + ")"}
-                                        </h4>
-                                      )}
+                                    Filter passengers by below
+                                  </h4>
+                                </FormLabel>
+                                <RadioGroup
+                                  row
+                                  sx={{
+                                    "& .MuiSvgIcon-root": {
+                                      fontSize: 20,
+                                    },
+                                    color: "black",
+                                  }}
+                                  value={value}
+                                  onChange={filterMethod}
+                                  defaultValue="all"
+                                  name="radio-buttons-group"
+                                >
+                                  <FormControlLabel
+                                    value="all"
+                                    control={<Radio />}
+                                    label="All"
+                                  />
+                                  <FormControlLabel
+                                    value="check"
+                                    control={<Radio />}
+                                    label="Checked In"
+                                  />
+                                  <FormControlLabel
+                                    value="notCheck"
+                                    control={<Radio />}
+                                    label="Not Checked In"
+                                  />
+                                  <FormControlLabel
+                                    value="wheel"
+                                    control={<Radio />}
+                                    label="Wheel Chair"
+                                  />
+                                  <FormControlLabel
+                                    value="infant"
+                                    control={<Radio />}
+                                    label="Infant"
+                                  />
+                                </RadioGroup>
+                              </FormControl>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                      {displayPassengers
+                        .filter((d) => d !== undefined)
+                        .map((passenger, key) => (
+                          <div>
+                            <Box sx={{ flexGrow: 1 }}>
+                              <Grid
+                                container
+                                spacing={{ xs: 11, md: 1 }}
+                                columns={{ xs: 0, sm: 0, md: 0 }}
+                              >
+                                <div key={key} className="passenger-row">
+                                  <div
+                                    style={{
+                                      textAlign: "left",
+                                      paddingLeft: "20px",
+                                    }}
+                                  >
+                                    Name: {passenger.name}
                                     <br />
-                                    {passenger.seat && (
-                                      <>
-                                        <Button
-                                          key={passenger.id}
-                                          variant="contained"
-                                          disabled={
-                                            passenger.flightId !== data.id
-                                          }
-                                          onClick={(event) =>
-                                            undoCheckIn(
-                                              event,
-                                              passenger,
-                                              data.id
-                                            )
-                                          }
-                                        >
-                                          <p>Undo CheckIn</p>
-                                        </Button>{" "}
-                                        <br />
-                                        <br />
-                                        <ChangeSeatForPassenger
-                                          open={false}
-                                          passenger={passenger}
-                                          data={data}
-                                        />
-                                      </>
-                                    )}
+                                    Ancillary Services:{" "}
+                                    {passenger.ancillaryServices !== undefined
+                                      ? passenger.ancillaryServices.join(", ")
+                                      : ""}
+                                    <br />
+                                    Meal Preference: {passenger.mealPreference}
+                                    <br />
+                                    Shopping request: {passenger.shopRequest}
+                                    <br />
+                                    Seat No: {passenger.seat}{" "}
+                                    {passenger.route !== undefined &&
+                                      "	(" + passenger.route + ")"}
                                   </div>
-                                </Grid>
-                              </div>
-                            </Grid>
-                          </Box>
-                          <br />
-                        </div>
-                      ))}
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
-              <br />
-            </div>
-          );
-        })}
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+                                  <Grid item xs={2} sm={4} md={4}>
+                                    <div
+                                      style={{
+                                        transform: [{ rotate: "90deg" }],
+                                      }}
+                                    >
+                                      <SelectSeatForPassenger
+                                        open={false}
+                                        passenger={passenger}
+                                        data={data}
+                                      />
+
+                                      {passenger.seat &&
+                                        passenger.flightId !== data.id && (
+                                          <h4 style={{ color: "greenyellow" }}>
+                                            To check in {passenger.name} to
+                                            current flight{" "}
+                                            {" (" +
+                                              data.from +
+                                              " - " +
+                                              data.to +
+                                              ")"}
+                                            <br />
+                                            Undo check in from already checked
+                                            in flight{" "}
+                                            {" (" + passenger.route + ")"}
+                                          </h4>
+                                        )}
+                                      <br />
+                                      {passenger.seat && (
+                                        <>
+                                          <Button
+                                            key={passenger.id}
+                                            variant="contained"
+                                            disabled={
+                                              passenger.flightId !== data.id
+                                            }
+                                            onClick={(event) =>
+                                              undoCheckIn(
+                                                event,
+                                                passenger,
+                                                data.id
+                                              )
+                                            }
+                                          >
+                                            <p>Undo CheckIn</p>
+                                          </Button>{" "}
+                                          <br />
+                                          <br />
+                                          <ChangeSeatForPassenger
+                                            open={false}
+                                            passenger={passenger}
+                                            data={data}
+                                          />
+                                        </>
+                                      )}
+                                    </div>
+                                  </Grid>
+                                </div>
+                              </Grid>
+                            </Box>
+                            <br />
+                          </div>
+                        ))}
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+                <br />
+              </div>
+            );
+          })}
+        </Box>
       </div>
     </div>
   );

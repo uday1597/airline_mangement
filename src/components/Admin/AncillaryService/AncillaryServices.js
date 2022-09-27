@@ -12,6 +12,13 @@ const AncillaryServices = () => {
   return (
     <div className="passenger-app">
       <div className="passenger-image">
+      <Box
+          mt={1}
+          sx={{
+            p: 1,
+            height: "552px",
+          }}
+        >
         <h1 style={{ textAlign: "center" }}>
           Manage Ancillary Service per Flight
         </h1>
@@ -25,9 +32,7 @@ const AncillaryServices = () => {
                     sx={{
                       p: 1,
                       bgcolor: "background.default",
-                      border: "lightseagreen",
                       height:"117px",
-
                     }}
                     borderRadius="5px"
                   >
@@ -60,8 +65,7 @@ const AncillaryServices = () => {
             );
           })}
         </div>
-        <br />
-        <br />
+        </Box>
       </div>
     </div>
   );

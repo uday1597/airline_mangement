@@ -17,6 +17,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import Box from "@mui/material/Box";
 
 const Passenger = () => {
   const toast = ToastServive.new({
@@ -99,128 +100,138 @@ const Passenger = () => {
   return (
     <div className="passenger-app">
       <div className="passenger-image">
-        <h1>Manage Passengers</h1>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <PassengersForm onSubmit={addPassenger} />
-          </Grid>
-          <Grid item xs={8}>
-            <div style={{ paddingRight: "35px" }}>
-              <div className="filter">
-                <FormControl>
-                  <FormLabel id="demo-radio-buttons-group-label">
-                    <h4 style={{ color: "white", paddingLeft: "60px" }}>
-                      Filter passengers by missing mandatory requirements
-                    </h4>
-                  </FormLabel>
-                  <RadioGroup
-                    row
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 15,
-                      },
-                      paddingLeft: "120px",
-                    }}
-                    value={value}
-                    onChange={filterMethod}
-                    defaultValue="all"
-                    name="radio-buttons-group"
-                  >
-                    <FormControlLabel
-                      value="all"
-                      control={<Radio />}
-                      label="All"
-                    />
-                    <FormControlLabel
-                      value="pass"
-                      control={<Radio />}
-                      label="Passport"
-                    />
-                    <FormControlLabel
-                      value="address"
-                      control={<Radio />}
-                      label="Address"
-                    />
-                    <FormControlLabel
-                      value="dob"
-                      control={<Radio />}
-                      label="Date of birth"
-                    />
-                  </RadioGroup>
-                </FormControl>
+        <Box
+          mt={1}
+          sx={{
+            p: 1,
+            height: "552px",
+          }}
+        >
+          <h1 style={{margin:"25px"}}>Manage Passengers</h1>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <PassengersForm onSubmit={addPassenger} />
+            </Grid>
+            <Grid item xs={8}>
+              <div style={{ paddingRight: "35px" }}>
+                <div className="filter">
+                  <FormControl>
+                    <FormLabel id="demo-radio-buttons-group-label">
+                      <h4 style={{ color: "white", paddingLeft: "60px" }}>
+                        Filter passengers by missing mandatory requirements
+                      </h4>
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 15,
+                        },
+                        paddingLeft: "120px",
+                      }}
+                      value={value}
+                      onChange={filterMethod}
+                      defaultValue="all"
+                      name="radio-buttons-group"
+                    >
+                      <FormControlLabel
+                        value="all"
+                        control={<Radio />}
+                        label="All"
+                      />
+                      <FormControlLabel
+                        value="pass"
+                        control={<Radio />}
+                        label="Passport"
+                      />
+                      <FormControlLabel
+                        value="address"
+                        control={<Radio />}
+                        label="Address"
+                      />
+                      <FormControlLabel
+                        value="dob"
+                        control={<Radio />}
+                        label="Date of birth"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </div>
               </div>
-            </div>
 
-            <Grid item xs={12}>
-              <h4
-                style={{ color: "white", textAlign: "left", padding: "20px" }}
-              >
-                Paasengers List
-              </h4>
-              <Paper
-                style={{
-                  maxHeight: 330,
-                  overflow: "auto",
-                  maxWidth: 860,
-                  borderRadius: "5px",
-                }}
-              >
-                <br />
-                {!displayPassengers.length > 0 ? (
-                  <h4
-                    style={{
-                      color: "grey",
-                      textAlign: "center",
-                      paddingBottom: "20px",
-                    }}
-                  >
-                    Add Passengers
-                  </h4>
-                ) : (
-                  displayPassengers
-                    .reverse()
-                    .filter((d) => d !== undefined)
-                    .map((passenger, key) => (
-                      <div key={key} className="passenger-row">
-                        <div style={{ textAlign: "left", paddingLeft: "20px" }}>
-                          Name: {passenger.name}
-                          <br />
-                          Passport Number: {passenger.pass}
-                          <br />
-                          Address: {passenger.address}
-                          <br />
-                          Ancillary: {passenger.ancillaryServices.join(", ")}
-                          <br />
-                          Seat Number: {passenger.seat}
-                          <br />
-                          Seat Preference: {passenger.seatPref}
-                          <br />
-                          Date of birth: {passenger.dob}
+              <Grid item xs={12}>
+                <h4
+                  style={{ color: "white", textAlign: "left", padding: "20px" }}
+                >
+                  Paasengers List
+                </h4>
+                <Paper
+                  style={{
+                    maxHeight: 330,
+                    overflow: "auto",
+                    maxWidth: 860,
+                    borderRadius: "5px",
+                  }}
+                >
+                  <br />
+                  {!displayPassengers.length > 0 ? (
+                    <h4
+                      style={{
+                        color: "grey",
+                        textAlign: "center",
+                        paddingBottom: "20px",
+                      }}
+                    >
+                      Add Passengers
+                    </h4>
+                  ) : (
+                    displayPassengers
+                      .reverse()
+                      .filter((d) => d !== undefined)
+                      .map((passenger, key) => (
+                        <div key={key} className="passenger-row">
+                          <div
+                            style={{ textAlign: "left", paddingLeft: "20px" }}
+                          >
+                            Name: {passenger.name}
+                            <br />
+                            Passport Number: {passenger.pass}
+                            <br />
+                            Address: {passenger.address}
+                            <br />
+                            Ancillary: {passenger.ancillaryServices.join(", ")}
+                            <br />
+                            Seat Number: {passenger.seat}
+                            <br />
+                            Seat Preference: {passenger.seatPref}
+                            <br />
+                            Date of birth: {passenger.dob}
+                          </div>
+                          <div className="icons">
+                            <TiEdit
+                              onClick={() =>
+                                setEdit({
+                                  editedId: null,
+                                  id: passenger.id,
+                                  nameValue: passenger.name,
+                                  passValue: passenger.pass,
+                                  addressValue: passenger.address,
+                                  dobValue: passenger.dob,
+                                  seatPrefValue: passenger.seatPref,
+                                  passengerValue: passenger,
+                                })
+                              }
+                              className="edit-icon"
+                            />
+                          </div>
                         </div>
-                        <div className="icons">
-                          <TiEdit
-                            onClick={() =>
-                              setEdit({
-                                editedId: null,
-                                id: passenger.id,
-                                nameValue: passenger.name,
-                                passValue: passenger.pass,
-                                addressValue: passenger.address,
-                                dobValue: passenger.dob,
-                                seatPrefValue: passenger.seatPref,
-                                passengerValue: passenger,
-                              })
-                            }
-                            className="edit-icon"
-                          />
-                        </div>
-                      </div>
-                    ))
-                )}
-              </Paper>
+                      ))
+                  )}
+                </Paper>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </div>
     </div>
   );

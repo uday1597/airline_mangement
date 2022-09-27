@@ -20,10 +20,10 @@ import Passenger from "./Admin/Passenger/Passengers";
 
 const MainPage = () => {
 	return (
-		<div>
-			{/* <WelcomPage/> */}
-			<Header />
-			<FlightHeader />
+		<>
+			<WelcomPage/>
+			{/* <Header />
+			<FlightHeader /> */}
 
 			<Switch>
 				<Route path='/header' component={Header} />
@@ -34,9 +34,9 @@ const MainPage = () => {
 				<Route path='/flightHome' component={FlightHome} />
 				<Route path='/checkIn' component={checkIn} />
 				<Route path='/inFlight' component={inFlight} />
-				<Route component={PageNotFound} />
+				{/* <Route component={PageNotFound} /> */}
 			</Switch>
-		</div>
+		</>
 	);
 };
 
